@@ -16,7 +16,6 @@ public class MovementInputHandler : MonoBehaviour
     private float MovementX = 0f;
     private Vector3 playerVelocity;
     private float gravityValue = -11f;
-    private Camera camera;
 
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundRadius;
@@ -26,15 +25,9 @@ public class MovementInputHandler : MonoBehaviour
     void Start() 
     {
         controller = GetComponent<CharacterController>();
-        camera = Camera.main;
     }
 
-    void Update()
-    {
-        playerMovement();
-    }
-
-    void playerMovement() {
+    public void playerMovement() {
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
 
@@ -84,13 +77,11 @@ public class MovementInputHandler : MonoBehaviour
         Vector3 movement = new Vector3(MovementX, 0f, 0f).normalized;
 
         if (!isGrounded) {
-            controller.Move(movement * jumpSpeed * Time.deltaTime);
             playerVelocity.y += gravityValue * Time.deltaTime;
-            controller.Move(playerVelocity * Time.deltaTime);
+            controller.Move((movement * speed + playerVelocity) * Time.deltaTime);
         }
 
-        controller.Move(movement * speed * Time.deltaTime);
         playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
+        controller.Move((movement * speed + playerVelocity) * Time.deltaTime);
     }
 }
