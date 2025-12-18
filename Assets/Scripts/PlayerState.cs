@@ -17,8 +17,11 @@ public class PlayerState : MonoBehaviour
     private float lockedZ;
     private bool playerSide = false; 
 
+    private MovementInputHandler movement;
+
     void Start() 
     {
+        movement = GetComponent<MovementInputHandler>();
         lockedZ = transform.position.z;
 
         player1 = GameObject.FindWithTag("Player1");
@@ -41,7 +44,7 @@ public class PlayerState : MonoBehaviour
 
         if (!isInHitStun) {
             // can do anything
-            MovementInputHandler.playerMovement(); // sort the reference problem here
+            movement.playerMovement(); // sort the reference problem here
             if (isGrounded) {
                 // ground attacks
             } else {
