@@ -33,9 +33,11 @@ public class MovementInputHandler : MonoBehaviour
 
         if (Input.GetKeyDown(moveLeft)) {
             leftPressed = true;
+            Debug.Log("leftPressed");
         }
         if (Input.GetKeyDown(moveRight)) {
             rightPressed = true;
+            Debug.Log("rightPressed");
         }
 
         if (isGrounded) {
@@ -80,8 +82,8 @@ public class MovementInputHandler : MonoBehaviour
             playerVelocity.y += gravityValue * Time.deltaTime;
             controller.Move((movement * speed + playerVelocity) * Time.deltaTime);
         }
-
-        playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move((movement * speed + playerVelocity) * Time.deltaTime);
+        
+            playerVelocity.y += gravityValue * Time.deltaTime;
+            controller.Move((movement * speed + playerVelocity) * Time.deltaTime);
     }
 }
