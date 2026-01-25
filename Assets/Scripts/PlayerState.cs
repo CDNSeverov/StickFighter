@@ -2,6 +2,121 @@ using UnityEngine;
 
 public class PlayerState : MonoBehaviour
 {
+    enum State { 
+        Idle, 
+        Attacking, 
+        Hitstun, 
+        Blocking,
+        BlockStun
+    }
+
+    [Header("Combat")]
+    [SerializeField] float attackDuration = 0.4f;
+    [SerializeField] float hitstunDuration = 0.5f;
+    [SerializeField] float blockStunDuration = 0.15f;
+    [SerializeField] float knockbackForce = 6f;
+    [SerializeField] float launchForce = 10f;
+    [SerializeField] GameObject attackHitboxPrefab;
+    [SerializeField] Transform attackSpawnPoint;
+
+    State currentState = State.Idle;
+
+    PlayerInput input;
+    PlayerMovement movement;
+
+    GameObject activeHitbox;
+
+    void Awake() {
+        input = GetComponent<PlayerInput>();
+        movement = GetComponent<PlayerMovement>();
+    }
+
+    void Update() {
+        if (currentState == State.Hitstun) {
+            return;
+        }
+
+        movement.Move(input.Horizontal);
+
+        if (input.JumpPressed) {
+            movement.Jump(input.Horizontal);
+        }
+
+        if (input.AttackPressed && currentState == State.Idle) {
+            StartAttack();
+        }
+    }
+
+    private void StartAttack() {
+        currentState = State.Attacking;
+
+        SpawnHitbox();
+
+        Invoke(nameof(EndAttack), 0.4f); // maybe add attackDuration
+
+        Debug.Log($"{name} attacking");
+    }
+    
+    private void EndAttack() {
+        currentState = State.Idle;
+        
+        if(activeHitbox != null) {
+            Destroy(activeHitbox);
+        }
+    }
+
+    public void TakeHit(Vector3 hitDirection) {
+        if (currentState == State.Hitstun) return;
+        if (currentState == State.Blocking || currentState == State.BlockStun) {
+            TakeBlockHit(hitDirection);
+            return;
+        }
+
+        TakeNormalHit(hitDirection);
+    }
+
+    private void TakeNormalHit(Vector3 hitDirection) {
+        currentState = State.Hitstun; 
+
+        movement.ResetVelocity();
+        
+        movement.ApplyKnockback(hitDirection.x * knockbackForce, launchForce);
+
+        Invoke(nameof(EndHitStun), hitstunDuration);
+    }
+
+    private void TakeBlockHit(Vector3 hitDirection) {
+        currentState = State.BlockStun;
+
+        movement.ResetVelocity();
+
+        movement.ApplyKnockback(hitDirection.x * knockbackForce * 0.3f, 0f);
+
+        Invoke(nameof(EndBlockStun), blockStunDuration);
+
+        Debug.Log($"{name} blocked");
+    }
+
+    private void EndHitStun() {
+        currentState = State.Idle;
+    }
+
+    private void EndBlockStun() {
+        currentState = State.Idle;
+    }
+
+    private void SpawnHitbox() {
+        activeHitbox = Instantiate(
+            attackHitboxPrefab,
+            attackSpawnPoint.position,
+            attackSpawnPoint.rotation
+        );
+
+        activeHitbox.GetComponent<PlayerAttack>().Init(this);
+    }
+
+
+    /*
     [SerializeField] private float health = 100f;
     private bool isAttacking;
     private bool isInHitStun;
@@ -106,15 +221,6 @@ public class PlayerState : MonoBehaviour
         }
     }
 
-    private void StartAttack() {
-        isAttacking = true;
-        movement.enabled = false;
-
-        // play attack animation here
-        SpawnHitbox();
-
-        Invoke(nameof(EndAttack), attackDuration);
-    }
 
     private void StartSpecial() {
         isAttacking = true;
@@ -126,14 +232,6 @@ public class PlayerState : MonoBehaviour
         Invoke(nameof(EndAttack), attackDuration);
     }
 
-    private void EndAttack() {
-        isAttacking = false;
-        movement.enabled = true;
-
-        if (activeHitbox != null) {
-            Destroy(activeHitbox);
-        }
-    }
 
     private void SpawnHitbox() {
         activeHitbox = Instantiate(
@@ -145,18 +243,6 @@ public class PlayerState : MonoBehaviour
         activeHitbox.GetComponent<PlayerAttack>().Init(this);
     }
 
-    public void TakeHit(Vector3 hitDirection) {
-        if(isInHitStun) {
-            return;
-        }
-
-        if(isBlocking) {
-            TakeBlockHit(hitDirection);
-            return;
-        }
-
-        TakeNormalHit(hitDirection);
-    }
 
     private void TakeNormalHit(Vector3 hitDirection) {
 
@@ -213,4 +299,5 @@ public class PlayerState : MonoBehaviour
 
         return Input.GetAxisRaw("Horizontal") > 0;
     }
+    */
 }

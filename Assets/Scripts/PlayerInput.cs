@@ -1,14 +1,33 @@
 using UnityEngine;
 
-public class MovementInputHandler : MonoBehaviour
+public class PlayerInput: MonoBehaviour
 {
-    public float speed = 5f;
-    public float jumpHeight = 5f;
-    public float jumpSpeed = 3f;
     public KeyCode moveLeft;
     public KeyCode moveRight;
     public KeyCode jumpButton;
+    public KeyCode attack;
+    public KeyCode special;
 
+    public float Horizontal { get; private set; }
+    public bool JumpPressed { get; private set; }
+    public bool AttackPressed { get; private set; }
+    public bool SpecialPressed { get; private set; }
+
+    void Update() {
+        Horizontal = 0f;
+        if (Input.GetKey(moveLeft)) Horizontal -= 1f;
+        if (Input.GetKey(moveRight)) Horizontal += 1f;
+
+        JumpPressed = Input.GetKeyDown(jumpButton);
+        AttackPressed = Input.GetKeyDown(attack);
+        SpecialPressed = Input.GetKeyDown(special);
+    }
+
+
+    /*
+    public float speed = 5f;
+    public float jumpHeight = 5f;
+    public float jumpSpeed = 3f;
     private bool leftPressed = false;
     private bool rightPressed = false;
 
@@ -21,7 +40,9 @@ public class MovementInputHandler : MonoBehaviour
     [SerializeField] private float groundRadius;
     [SerializeField] private LayerMask whatIsGround;
     private bool isGrounded;
+    */
 
+    /*
     void Start() 
     {
         controller = GetComponent<CharacterController>();
@@ -86,4 +107,5 @@ public class MovementInputHandler : MonoBehaviour
             playerVelocity.y += gravityValue * Time.deltaTime;
             controller.Move((movement * speed + playerVelocity) * Time.deltaTime);
     }
+    */
 }

@@ -129,10 +129,10 @@ GameObject:
   m_Component:
   - component: {fileID: 103458965}
   - component: {fileID: 103458966}
-  - component: {fileID: 103458968}
-  - component: {fileID: 103458969}
-  - component: {fileID: 103458970}
   - component: {fileID: 103458971}
+  - component: {fileID: 103458974}
+  - component: {fileID: 103458973}
+  - component: {fileID: 103458972}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player1
@@ -184,79 +184,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!136 &103458968
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103458962}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.2, z: 0}
---- !u!114 &103458969
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103458962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f434858ada835c442a51928b0a33db57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerState
-  health: 100
-  groundCheck: {fileID: 1139040835}
-  groundRadius: 0.1
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 64
-  attackButton: 102
-  specialButton: 103
-  attackHitboxPrefab: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
-  attackSpawnPoint: {fileID: 828110829}
-  attackDuration: 0.4
-  knockbackForce: 6
-  launchForce: 4
-  hitstunDuration: 0.5
-  blockStunDuration: 0.15
---- !u!114 &103458970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103458962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d43a9e0cd962c9d4ba6d49fb3e197c8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MovementInputHandler
-  speed: 5
-  jumpHeight: 2
-  jumpSpeed: 3
-  moveLeft: 97
-  moveRight: 100
-  jumpButton: 119
-  groundCheck: {fileID: 1139040835}
-  groundRadius: 0.1
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!54 &103458971
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -284,6 +211,62 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
+--- !u!114 &103458972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103458962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3d5f885eacb854f8a504651e894263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  speed: 5
+  jumpForce: 5
+  gravity: -11
+  groundCheck: {fileID: 1139040835}
+  groundRadius: 0.1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &103458973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103458962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d43a9e0cd962c9d4ba6d49fb3e197c8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
+  moveLeft: 97
+  moveRight: 100
+  jumpButton: 119
+  attack: 102
+  special: 103
+--- !u!114 &103458974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103458962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f434858ada835c442a51928b0a33db57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerState
+  attackDuration: 0.4
+  hitstunDuration: 0.5
+  blockStunDuration: 0.15
+  knockbackForce: 6
+  launchForce: 10
+  attackHitboxPrefab: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
+  attackSpawnPoint: {fileID: 828110829}
 --- !u!1 &163790809
 GameObject:
   m_ObjectHideFlags: 0
@@ -1675,8 +1658,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1832326830}
   - component: {fileID: 1832326832}
-  - component: {fileID: 1832326834}
   - component: {fileID: 1832326835}
+  - component: {fileID: 1832326837}
   - component: {fileID: 1832326836}
   m_Layer: 0
   m_Name: Player 2
@@ -1729,29 +1712,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!136 &1832326834
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1832326827}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.2, z: 0}
 --- !u!114 &1832326835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1764,22 +1724,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f434858ada835c442a51928b0a33db57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerState
-  health: 100
-  groundCheck: {fileID: 1367126272}
-  groundRadius: 0.1
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 64
-  attackButton: 108
-  specialButton: 107
-  attackHitboxPrefab: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
-  attackSpawnPoint: {fileID: 456126670}
   attackDuration: 0.4
-  knockbackForce: 6
-  launchForce: 4
   hitstunDuration: 0.5
   blockStunDuration: 0.15
+  knockbackForce: 6
+  launchForce: 10
+  attackHitboxPrefab: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
+  attackSpawnPoint: {fileID: 456126670}
 --- !u!114 &1832326836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832326827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3d5f885eacb854f8a504651e894263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  speed: 5
+  jumpForce: 5
+  gravity: -11
+  groundCheck: {fileID: 1367126272}
+  groundRadius: 0.1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &1832326837
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1790,18 +1762,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d43a9e0cd962c9d4ba6d49fb3e197c8c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MovementInputHandler
-  speed: 5
-  jumpHeight: 2
-  jumpSpeed: 3
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
   moveLeft: 276
   moveRight: 275
   jumpButton: 273
-  groundCheck: {fileID: 1367126272}
-  groundRadius: 0.1
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 64
+  attack: 257
+  special: 258
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
