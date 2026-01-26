@@ -6,7 +6,7 @@ public class PlayerState : MonoBehaviour
         Idle, 
         Attacking, 
         Hitstun, 
-        Blocking,
+        HoldingBack,
         BlockStun
     }
 
@@ -19,21 +19,47 @@ public class PlayerState : MonoBehaviour
     [SerializeField] GameObject attackHitboxPrefab;
     [SerializeField] Transform attackSpawnPoint;
 
+    [Header("Facing")]
+    [SerializeField] Transform graphics;
+    [SerializeField] Transform visor;
+
     State currentState = State.Idle;
 
     PlayerInput input;
     PlayerMovement movement;
+    PlayerBlocking blocking;
 
     GameObject activeHitbox;
+
+    // Back = -FacingDirection
+    // Forward = +FacingDirection
+    public int FacingDirection { get; private set; }
+    
+    [SerializeField] Transform opponent;
 
     void Awake() {
         input = GetComponent<PlayerInput>();
         movement = GetComponent<PlayerMovement>();
+        blocking = GetComponent<PlayerBlocking>();
     }
 
+    void Start() {
+        FacingDirection = transform.localScale.x >= 0 ? 1 : -1;
+    }
+
+
     void Update() {
-        if (currentState == State.Hitstun) {
+        //Debug.Log($"State: {currentState}");
+        UpdateFacing();
+
+        if (currentState == State.Hitstun || currentState == State.BlockStun) {
             return;
+        }
+
+        if (currentState == State.Idle && blocking.WantsToBlock) {
+            currentState = State.HoldingBack;
+        } else if (currentState == State.HoldingBack && !blocking.WantsToBlock) {
+            currentState = State.Idle;
         }
 
         movement.Move(input.Horizontal);
@@ -52,7 +78,7 @@ public class PlayerState : MonoBehaviour
 
         SpawnHitbox();
 
-        Invoke(nameof(EndAttack), 0.4f); // maybe add attackDuration
+        Invoke(nameof(EndAttack), attackDuration);
 
         Debug.Log($"{name} attacking");
     }
@@ -60,14 +86,15 @@ public class PlayerState : MonoBehaviour
     private void EndAttack() {
         currentState = State.Idle;
         
-        if(activeHitbox != null) {
+        if (activeHitbox != null) {
             Destroy(activeHitbox);
         }
     }
 
     public void TakeHit(Vector3 hitDirection) {
-        if (currentState == State.Hitstun) return;
-        if (currentState == State.Blocking || currentState == State.BlockStun) {
+        if (currentState == State.Hitstun || currentState == State.BlockStun) return;
+
+        if (currentState == State.HoldingBack) {
             TakeBlockHit(hitDirection);
             return;
         }
@@ -76,20 +103,21 @@ public class PlayerState : MonoBehaviour
     }
 
     private void TakeNormalHit(Vector3 hitDirection) {
+        CancelAttack();
+
         currentState = State.Hitstun; 
 
         movement.ResetVelocity();
-        
         movement.ApplyKnockback(hitDirection.x * knockbackForce, launchForce);
 
         Invoke(nameof(EndHitStun), hitstunDuration);
     }
 
     private void TakeBlockHit(Vector3 hitDirection) {
+        CancelAttack();
         currentState = State.BlockStun;
 
         movement.ResetVelocity();
-
         movement.ApplyKnockback(hitDirection.x * knockbackForce * 0.3f, 0f);
 
         Invoke(nameof(EndBlockStun), blockStunDuration);
@@ -115,97 +143,55 @@ public class PlayerState : MonoBehaviour
         activeHitbox.GetComponent<PlayerAttack>().Init(this);
     }
 
+    void UpdateFacing() {
+        if (opponent == null)
+            return;
+        
+        //Debug.Log("In UpdateFacing");
+
+        if (!movement.isGrounded)
+            return;
+
+        float diff = opponent.position.x - transform.position.x;
+
+        if (Mathf.Abs(diff) < 0.05f)
+            return;
+
+        int newFacing = diff > 0 ? 1 : -1;
+
+        if (newFacing == FacingDirection)
+            return;
+
+        FacingDirection = newFacing;
+
+        FlipVisuals();
+    }
+
+    void FlipVisuals() {
+        Debug.Log("In FlipVisuals");
+
+        Vector3 gScale = graphics.localScale;
+        gScale.x = Mathf.Abs(gScale.x) * FacingDirection;
+        graphics.localScale = gScale;
+
+        Vector3 vScale = visor.localScale;
+        vScale.x = Mathf.Abs(vScale.x) * FacingDirection;
+        visor.localScale = vScale;
+
+        Vector3 aPos = attackSpawnPoint.localPosition;
+        aPos.x = Mathf.Abs(aPos.x) * FacingDirection;
+        attackSpawnPoint.localPosition = aPos;
+    }
+
+    private void CancelAttack() {
+        if (activeHitbox != null) {
+            Destroy(activeHitbox);
+        }
+
+        CancelInvoke(nameof(EndAttack));
+    }
 
     /*
-    [SerializeField] private float health = 100f;
-    private bool isAttacking;
-    private bool isInHitStun;
-    private bool isGrounded;
-    private bool isBlocking;
-
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private float groundRadius;
-    [SerializeField] private LayerMask whatIsGround;
-
-    private GameObject player1;
-    private GameObject player2;
-    
-    private float lockedZ;
-    private bool playerSide = false; 
-
-    private MovementInputHandler movement;
-
-    public KeyCode attackButton;
-    public KeyCode specialButton;
-
-    [SerializeField] private GameObject attackHitboxPrefab;
-    [SerializeField] private Transform attackSpawnPoint;
-    [SerializeField] private float attackDuration = 0.4f;
-
-    private GameObject activeHitbox;
-
-    [SerializeField] private float knockbackForce = 0.3f;
-    [SerializeField] private float launchForce = 10f;
-    [SerializeField] private float hitstunDuration = 0.5f;
-
-    [SerializeField] private float blockStunDuration = 0.15f;
-
-    private Rigidbody rb;
-
-    void Start() 
-    {
-        movement = GetComponent<MovementInputHandler>();
-        rb = GetComponent<Rigidbody>();
-
-        lockedZ = transform.position.z;
-
-        player1 = GameObject.FindWithTag("Player1");
-        player2 = GameObject.FindWithTag("Player2");
-    }
-
-    void Update()
-    {
-        //if (health <= 0) {
-        //    Debug.Log("MF DEAAAAAD");
-        //}
-
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
-
-        isBlocking = isGrounded && !isAttacking && IsHoldingBack();
-
-        lockZAxis();
-
-        if (isGrounded) {
-            flipPlayer();
-        }
-
-        if (!isInHitStun && !isAttacking) {
-
-            movement.playerMovement(); 
-
-            if (isGrounded) {
-                // ground attacks
-                if (Input.GetKeyDown(attackButton)) {
-                    StartAttack();
-                }
-                if (Input.GetKeyDown(specialButton)) {
-                    StartSpecial();
-                }
-            } else {
-                // air attacks
-            }
-        } else {
-            // can do nothing
-        }
-
-    }
-
-    private void lockZAxis() {
-        Vector3 pos = transform.position;
-        pos.z = lockedZ;
-        transform.position = pos;
-    }
-
     private void flipPlayer() {
         Vector3 p1 = player1.transform.position;
         Vector3 p2 = player2.transform.position;
@@ -219,85 +205,6 @@ public class PlayerState : MonoBehaviour
             transform.eulerAngles = rot;
             playerSide = !playerSide;
         }
-    }
-
-
-    private void StartSpecial() {
-        isAttacking = true;
-        movement.enabled = false;
-
-        // play special animation here
-        SpawnHitbox();
-
-        Invoke(nameof(EndAttack), attackDuration);
-    }
-
-
-    private void SpawnHitbox() {
-        activeHitbox = Instantiate(
-            attackHitboxPrefab,
-            attackSpawnPoint.position,
-            attackSpawnPoint.rotation
-        );
-
-        activeHitbox.GetComponent<PlayerAttack>().Init(this);
-    }
-
-
-    private void TakeNormalHit(Vector3 hitDirection) {
-
-        isInHitStun = true;
-        isAttacking = false;
-
-        movement.enabled = false;
-        rb.linearVelocity = Vector3.zero;
-
-        Vector3 force = hitDirection.normalized * knockbackForce + Vector3.up * launchForce;
-
-        rb.AddForce(force, ForceMode.Impulse);
-
-        Invoke(nameof(EndHitStun), hitstunDuration);
-    }
-
-    private void TakeBlockHit(Vector3 hitDirection) {
-        isInHitStun = true;
-        movement.enabled = false;
-
-        rb.linearVelocity = Vector3.zero;
-
-        Vector3 blockForce = hitDirection.normalized * (knockbackForce * 0.3f);
-
-        rb.AddForce(blockForce, ForceMode.Impulse);
-
-        Invoke(nameof(EndBlockStun), blockStunDuration);
-
-        Debug.Log($"{name} blocked");
-    }
-
-    private void EndBlockStun() {
-        isInHitStun = false;
-        movement.enabled = true;
-    }
-
-    private void EndHitStun() {
-        isInHitStun = false;
-        movement.enabled = true;
-    }
-
-    private bool IsHoldingBack() {
-        if (player1 == null || player2 == null) {
-            return false;
-        }
-
-        Transform opponent = gameObject == player1 ? player2.transform : player1.transform;
-
-        float directionToOpponent = opponent.position.x - transform.position.x;
-
-        if (directionToOpponent > 0) {
-            return Input.GetAxisRaw("Horizontal") < 0;
-        }
-
-        return Input.GetAxisRaw("Horizontal") > 0;
     }
     */
 }

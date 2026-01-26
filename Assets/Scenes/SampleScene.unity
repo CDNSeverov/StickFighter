@@ -129,10 +129,10 @@ GameObject:
   m_Component:
   - component: {fileID: 103458965}
   - component: {fileID: 103458966}
-  - component: {fileID: 103458971}
   - component: {fileID: 103458974}
   - component: {fileID: 103458973}
   - component: {fileID: 103458972}
+  - component: {fileID: 103458975}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player1
@@ -184,33 +184,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &103458971
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103458962}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 120
-  m_CollisionDetection: 0
 --- !u!114 &103458972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,6 +240,21 @@ MonoBehaviour:
   launchForce: 10
   attackHitboxPrefab: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
   attackSpawnPoint: {fileID: 828110829}
+  graphics: {fileID: 988179454}
+  visor: {fileID: 1726545768}
+  opponent: {fileID: 1832326830}
+--- !u!114 &103458975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103458962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35036d68dc1007042af64fa37d3cac84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerBlocking
 --- !u!1 &163790809
 GameObject:
   m_ObjectHideFlags: 0
@@ -1661,6 +1649,7 @@ GameObject:
   - component: {fileID: 1832326835}
   - component: {fileID: 1832326837}
   - component: {fileID: 1832326836}
+  - component: {fileID: 1832326838}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: Player2
@@ -1731,6 +1720,9 @@ MonoBehaviour:
   launchForce: 10
   attackHitboxPrefab: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
   attackSpawnPoint: {fileID: 456126670}
+  graphics: {fileID: 1012846534}
+  visor: {fileID: 1761944304}
+  opponent: {fileID: 103458965}
 --- !u!114 &1832326836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1768,6 +1760,18 @@ MonoBehaviour:
   jumpButton: 273
   attack: 257
   special: 258
+--- !u!114 &1832326838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832326827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35036d68dc1007042af64fa37d3cac84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerBlocking
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

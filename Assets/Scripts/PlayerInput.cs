@@ -23,6 +23,11 @@ public class PlayerInput: MonoBehaviour
         SpecialPressed = Input.GetKeyDown(special);
     }
 
+    
+    public bool HoldingBack(int FacingDirection) {
+        return Horizontal * FacingDirection < 0f;
+    }
+
 
     /*
     public float speed = 5f;
