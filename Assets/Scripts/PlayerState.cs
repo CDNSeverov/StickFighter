@@ -4,8 +4,16 @@ public class PlayerState : MonoBehaviour
 {
     enum State { 
         Idle, 
-        Attacking, 
+        Attack1,
+        Attack2,
+        Attack3,
+        NSpecial,
+        FSpecial,
+        BSpecial,
+        ASpecial,
         Hitstun, 
+        KnockedDown,
+        Recovery,
         HoldingBack,
         BlockStun
     }
@@ -22,6 +30,13 @@ public class PlayerState : MonoBehaviour
     [Header("Facing")]
     [SerializeField] Transform graphics;
     [SerializeField] Transform visor;
+
+    [Header("Combo")]
+    [SerializeField] float comboInputWindow = 0.2f;
+    [SerializeField] float comboResetDelay = 0.5f;
+
+    bool comboBuffered;
+    bool comboLocked;
 
     State currentState = State.Idle;
 
@@ -68,27 +83,103 @@ public class PlayerState : MonoBehaviour
             movement.Jump(input.Horizontal);
         }
 
-        if (input.AttackPressed && currentState == State.Idle) {
-            StartAttack();
+        if (input.AttackPressed) {
+            HandleAttackInput();
         }
     }
 
-    private void StartAttack() {
-        currentState = State.Attacking;
+    private void HandleAttackInput() {
+        if (comboLocked) {
+            return;
+        }
+
+        switch (currentState) {
+            case State.Idle:
+                StartAttack1();
+                break;
+            case State.Attack1:
+            case State.Attack2:
+                comboBuffered = true;
+                break;
+        }
+    }
+
+    private void StartAttack1() {
+        currentState = State.Attack1;
+        comboBuffered = false;
+
+        SpawnHitbox();
+
+        Invoke(nameof(OpenComboWindow), attackDuration - comboInputWindow);
+        Invoke(nameof(EndAttack), attackDuration);
+
+        Debug.Log($"{name} attack 1");
+    }
+
+    private void StartAttack2() {
+        currentState = State.Attack2;
+        comboBuffered = false;
+
+        SpawnHitbox();
+        
+        Invoke(nameof(OpenComboWindow), attackDuration - comboInputWindow);
+        Invoke(nameof(EndAttack), attackDuration);
+
+        Debug.Log($"{name} attack 2");
+    }
+
+    private void StartAttack3() {
+        currentState = State.Attack3;
+        comboBuffered = false;
+        comboLocked = true;
 
         SpawnHitbox();
 
         Invoke(nameof(EndAttack), attackDuration);
+        Invoke(nameof(ResetComboLock), comboResetDelay);
 
-        Debug.Log($"{name} attacking");
+        Debug.Log($"{name} attack 3");
+    }
+
+    private void OpenComboWindow() {
+        if (!comboBuffered) {
+            return;
+        }
+
+        if (currentState == State.Attack1) {
+            CancelInvoke(nameof(EndAttack));
+            StartAttack2();
+        } else if (currentState == State.Attack2) {
+            CancelInvoke(nameof(EndAttack));
+            StartAttack3();
+        }
     }
     
     private void EndAttack() {
-        currentState = State.Idle;
-        
         if (activeHitbox != null) {
             Destroy(activeHitbox);
         }
+
+        if (currentState == State.Attack1 || currentState == State.Attack2) {
+            currentState = State.Idle;
+        } else if (currentState == State.Attack3) {
+            currentState = State.Idle;
+        }
+    }
+
+    private void ResetComboLock() {
+        comboLocked = false;
+    }
+    
+    private void CancelAttack() {
+        if (activeHitbox != null) {
+            Destroy(activeHitbox);
+        }
+
+        comboBuffered = false;
+        comboLocked = false;
+
+        CancelInvoke();
     }
 
     public void TakeHit(Vector3 hitDirection) {
@@ -102,6 +193,18 @@ public class PlayerState : MonoBehaviour
         TakeNormalHit(hitDirection);
     }
 
+    private void TakeSpecialHit() {
+        // When player gets hit by a special (that is not a projectile) they get KnockedDown. 
+        // This means they need a second to recover to idle stance, during this time they can not be hit. 
+        // During the recovery process they are in the Recovery state.
+        Debug.Log($"{name} got hit by special");
+    }
+
+    private void TakeProjectileHit() {
+        // When player gets hit by a projectile (they are usually spawned through special attacks) they just go into HitStun.
+        Debug.Log($"{name} got hit by projectile");
+    }
+
     private void TakeNormalHit(Vector3 hitDirection) {
         CancelAttack();
 
@@ -111,6 +214,8 @@ public class PlayerState : MonoBehaviour
         movement.ApplyKnockback(hitDirection.x * knockbackForce, launchForce);
 
         Invoke(nameof(EndHitStun), hitstunDuration);
+        
+        Debug.Log($"{name} got hit by attack");
     }
 
     private void TakeBlockHit(Vector3 hitDirection) {
@@ -143,6 +248,8 @@ public class PlayerState : MonoBehaviour
         activeHitbox.GetComponent<PlayerAttack>().Init(this);
     }
 
+    // None of this actually works. I will look into it when I start implementing animations and stuff like that.
+
     void UpdateFacing() {
         if (opponent == null)
             return;
@@ -168,7 +275,7 @@ public class PlayerState : MonoBehaviour
     }
 
     void FlipVisuals() {
-        Debug.Log("In FlipVisuals");
+        //Debug.Log("In FlipVisuals");
 
         Vector3 gScale = graphics.localScale;
         gScale.x = Mathf.Abs(gScale.x) * FacingDirection;
@@ -181,14 +288,6 @@ public class PlayerState : MonoBehaviour
         Vector3 aPos = attackSpawnPoint.localPosition;
         aPos.x = Mathf.Abs(aPos.x) * FacingDirection;
         attackSpawnPoint.localPosition = aPos;
-    }
-
-    private void CancelAttack() {
-        if (activeHitbox != null) {
-            Destroy(activeHitbox);
-        }
-
-        CancelInvoke(nameof(EndAttack));
     }
 
     /*
