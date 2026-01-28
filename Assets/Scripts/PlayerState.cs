@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class PlayerState : MonoBehaviour
 {
-    enum State { 
+    public enum State { 
         Idle, 
         Attack1,
         Attack2,
         Attack3,
+        AttackA,
         NSpecial,
         FSpecial,
         BSpecial,
@@ -19,9 +20,6 @@ public class PlayerState : MonoBehaviour
     }
 
     [Header("Combat")]
-    [SerializeField] float attackDuration = 0.4f;
-    [SerializeField] float hitstunDuration = 0.5f;
-    [SerializeField] float blockStunDuration = 0.15f;
     [SerializeField] float knockbackForce = 6f;
     [SerializeField] float launchForce = 10f;
     [SerializeField] GameObject attackHitboxPrefab;
@@ -30,6 +28,7 @@ public class PlayerState : MonoBehaviour
     [Header("Facing")]
     [SerializeField] Transform graphics;
     [SerializeField] Transform visor;
+    [SerializeField] Transform opponent;
 
     [Header("Combo")]
     [SerializeField] float comboInputWindow = 0.2f;
@@ -38,24 +37,25 @@ public class PlayerState : MonoBehaviour
     bool comboBuffered;
     bool comboLocked;
 
-    State currentState = State.Idle;
+    // Back = -FacingDirection
+    // Forward = +FacingDirection
+    public int FacingDirection { get; private set; }
+    public State currentState { get; private set; } = State.Idle;
 
     PlayerInput input;
     PlayerMovement movement;
     PlayerBlocking blocking;
+    Character character;
+    Animator animator;
 
     GameObject activeHitbox;
-
-    // Back = -FacingDirection
-    // Forward = +FacingDirection
-    public int FacingDirection { get; private set; }
-    
-    [SerializeField] Transform opponent;
 
     void Awake() {
         input = GetComponent<PlayerInput>();
         movement = GetComponent<PlayerMovement>();
         blocking = GetComponent<PlayerBlocking>();
+        character = GetComponent<Character>();
+        animator = GetComponent<Animator>();
     }
 
     void Start() {
@@ -64,126 +64,142 @@ public class PlayerState : MonoBehaviour
 
 
     void Update() {
-        //Debug.Log($"State: {currentState}");
         UpdateFacing();
+        animator.SetInteger("State", (int)currentState);
 
-        if (currentState == State.Hitstun || currentState == State.BlockStun) {
+        if (currentState == State.Hitstun || currentState == State.BlockStun)
             return;
-        }
 
-        if (currentState == State.Idle && blocking.WantsToBlock) {
-            currentState = State.HoldingBack;
-        } else if (currentState == State.HoldingBack && !blocking.WantsToBlock) {
-            currentState = State.Idle;
-        }
+        HandleBlocking();
+        HandleMovement();
+        HandleInputs();
+    }
 
+    void HandleInputs() {
+        if (input.AttackPressed)
+            HandleAttackInput();
+
+        if (input.SpecialPressed)
+            HandleSpecialInput();
+    }
+
+    void HandleMovement() {
         movement.Move(input.Horizontal);
 
-        if (input.JumpPressed) {
+        if (input.JumpPressed)
             movement.Jump(input.Horizontal);
-        }
-
-        if (input.AttackPressed) {
-            HandleAttackInput();
-        }
     }
 
-    private void HandleAttackInput() {
-        if (comboLocked) {
+    void HandleBlocking() {
+        if (currentState == State.Idle && blocking.WantsToBlock)
+            SetState(State.HoldingBack);
+        else if (currentState == State.HoldingBack && !blocking.WantsToBlock)
+            SetState(State.Idle);
+    }
+
+    void HandleSpecialInput() {
+        if (currentState != State.Idle && currentState != State.HoldingBack)
             return;
+
+        bool airborne = !movement.isGrounded;
+
+        if (airborne) {
+            SetState(State.ASpecial);
+            character.AirSpecial();
+        }
+        else if (blocking.WantsToBlock) {
+            SetState(State.BSpecial);
+            character.BackSpecial();
+        }
+        else if (input.Horizontal * FacingDirection > 0) {
+            SetState(State.FSpecial);
+            character.ForwardSpecial();
+        }
+        else {
+            SetState(State.NSpecial);
+            character.NeutralSpecial();
         }
 
-        switch (currentState) {
-            case State.Idle:
-                StartAttack1();
-                break;
-            case State.Attack1:
-            case State.Attack2:
-                comboBuffered = true;
-                break;
-        }
+        animator.SetTrigger("Special");
     }
 
-    private void StartAttack1() {
-        currentState = State.Attack1;
-        comboBuffered = false;
-
-        SpawnHitbox();
-
-        Invoke(nameof(OpenComboWindow), attackDuration - comboInputWindow);
-        Invoke(nameof(EndAttack), attackDuration);
-
-        Debug.Log($"{name} attack 1");
-    }
-
-    private void StartAttack2() {
-        currentState = State.Attack2;
-        comboBuffered = false;
-
-        SpawnHitbox();
-        
-        Invoke(nameof(OpenComboWindow), attackDuration - comboInputWindow);
-        Invoke(nameof(EndAttack), attackDuration);
-
-        Debug.Log($"{name} attack 2");
-    }
-
-    private void StartAttack3() {
-        currentState = State.Attack3;
-        comboBuffered = false;
-        comboLocked = true;
-
-        SpawnHitbox();
-
-        Invoke(nameof(EndAttack), attackDuration);
-        Invoke(nameof(ResetComboLock), comboResetDelay);
-
-        Debug.Log($"{name} attack 3");
-    }
-
-    private void OpenComboWindow() {
-        if (!comboBuffered) {
+    void HandleAttackInput() {
+        if (comboLocked)
             return;
-        }
 
-        if (currentState == State.Attack1) {
-            CancelInvoke(nameof(EndAttack));
-            StartAttack2();
-        } else if (currentState == State.Attack2) {
-            CancelInvoke(nameof(EndAttack));
-            StartAttack3();
-        }
-    }
-    
-    private void EndAttack() {
-        if (activeHitbox != null) {
-            Destroy(activeHitbox);
+        if (currentState == State.Idle) {
+            StartAttack1();
+            return;
         }
 
         if (currentState == State.Attack1 || currentState == State.Attack2) {
-            currentState = State.Idle;
-        } else if (currentState == State.Attack3) {
-            currentState = State.Idle;
+            comboBuffered = true;
         }
     }
 
-    private void ResetComboLock() {
-        comboLocked = false;
-    }
-    
-    private void CancelAttack() {
-        if (activeHitbox != null) {
-            Destroy(activeHitbox);
-        }
-
+    void StartAttack1() {
+        SetState(State.Attack1);
         comboBuffered = false;
-        comboLocked = false;
+        character.OnAttack1();
+        animator.SetTrigger("Attack");
+    }
 
-        CancelInvoke();
+    void StartAttack2() {
+        SetState(State.Attack2);
+        comboBuffered = false;
+        character.OnAttack2();
+        animator.SetTrigger("Attack");
+    }
+
+    void StartAttack3() {
+        SetState(State.Attack3);
+        comboBuffered = false;
+        comboLocked = true;
+        character.OnAttack3();
+        animator.SetTrigger("Attack");
+    }
+
+    public void Anim_SpawnHitbox() {
+        activeHitbox = Instantiate(
+            attackHitboxPrefab,
+            attackSpawnPoint.position,
+            attackSpawnPoint.rotation
+        );
+        activeHitbox.GetComponent<PlayerAttack>().Init(this);
+    }
+
+    public void Anim_EndHitbox() {
+        if (activeHitbox != null)
+            Destroy(activeHitbox);
+    }
+
+    public void Anim_OpenComboWindow() {
+        comboBuffered = false;
+    }
+
+    public void Anim_CheckCombo() {
+        if (!comboBuffered)
+            return;
+
+        if (currentState == State.Attack1)
+            StartAttack2();
+        else if (currentState == State.Attack2)
+            StartAttack3();
+    }
+
+    public void Anim_EndAttack() {
+        SetState(State.Idle);
+    }
+
+    public void Anim_UnlockCombo() {
+        comboLocked = false;
     }
 
     public void TakeHit(Vector3 hitDirection) {
-        if (currentState == State.Hitstun || currentState == State.BlockStun) return;
+        if (currentState == State.Hitstun || currentState == State.BlockStun)
+            return;
+
+        CancelAttack();
 
         if (currentState == State.HoldingBack) {
             TakeBlockHit(hitDirection);
@@ -192,6 +208,29 @@ public class PlayerState : MonoBehaviour
 
         TakeNormalHit(hitDirection);
     }
+
+    void TakeNormalHit(Vector3 hitDir) {
+        SetState(State.Hitstun);
+        movement.ResetVelocity();
+        movement.ApplyKnockback(hitDir.x * knockbackForce, launchForce);
+        animator.SetTrigger("Hit");
+    }
+
+    void TakeBlockHit(Vector3 hitDir) {
+        SetState(State.BlockStun);
+        movement.ResetVelocity();
+        movement.ApplyKnockback(hitDir.x * knockbackForce * 0.3f, 0f);
+        animator.SetTrigger("BlockHit");
+    }
+
+    public void Anim_EndHitstun() {
+        SetState(State.Idle);
+    }
+
+    public void Anim_EndBlockstun() {
+        SetState(State.Idle);
+    }
+
 
     private void TakeSpecialHit() {
         // When player gets hit by a special (that is not a projectile) they get KnockedDown. 
@@ -205,89 +244,50 @@ public class PlayerState : MonoBehaviour
         Debug.Log($"{name} got hit by projectile");
     }
 
-    private void TakeNormalHit(Vector3 hitDirection) {
-        CancelAttack();
-
-        currentState = State.Hitstun; 
-
-        movement.ResetVelocity();
-        movement.ApplyKnockback(hitDirection.x * knockbackForce, launchForce);
-
-        Invoke(nameof(EndHitStun), hitstunDuration);
-        
-        Debug.Log($"{name} got hit by attack");
+    void CancelAttack() {
+        comboBuffered = false;
+        comboLocked = false;
+        Anim_EndHitbox();
     }
 
-    private void TakeBlockHit(Vector3 hitDirection) {
-        CancelAttack();
-        currentState = State.BlockStun;
-
-        movement.ResetVelocity();
-        movement.ApplyKnockback(hitDirection.x * knockbackForce * 0.3f, 0f);
-
-        Invoke(nameof(EndBlockStun), blockStunDuration);
-
-        Debug.Log($"{name} blocked");
+    void SetState(State newState) {
+        currentState = newState;
     }
-
-    private void EndHitStun() {
-        currentState = State.Idle;
-    }
-
-    private void EndBlockStun() {
-        currentState = State.Idle;
-    }
-
-    private void SpawnHitbox() {
-        activeHitbox = Instantiate(
-            attackHitboxPrefab,
-            attackSpawnPoint.position,
-            attackSpawnPoint.rotation
-        );
-
-        activeHitbox.GetComponent<PlayerAttack>().Init(this);
-    }
-
-    // None of this actually works. I will look into it when I start implementing animations and stuff like that.
 
     void UpdateFacing() {
-        if (opponent == null)
-            return;
-        
-        //Debug.Log("In UpdateFacing");
-
-        if (!movement.isGrounded)
+        if (opponent == null || !movement.isGrounded)
             return;
 
         float diff = opponent.position.x - transform.position.x;
-
         if (Mathf.Abs(diff) < 0.05f)
             return;
 
         int newFacing = diff > 0 ? 1 : -1;
-
         if (newFacing == FacingDirection)
             return;
 
         FacingDirection = newFacing;
-
         FlipVisuals();
     }
 
     void FlipVisuals() {
-        //Debug.Log("In FlipVisuals");
+        graphics.localScale = new Vector3(
+            Mathf.Abs(graphics.localScale.x) * FacingDirection,
+            graphics.localScale.y,
+            graphics.localScale.z
+        );
 
-        Vector3 gScale = graphics.localScale;
-        gScale.x = Mathf.Abs(gScale.x) * FacingDirection;
-        graphics.localScale = gScale;
+        visor.localScale = new Vector3(
+            Mathf.Abs(visor.localScale.x) * FacingDirection,
+            visor.localScale.y,
+            visor.localScale.z
+        );
 
-        Vector3 vScale = visor.localScale;
-        vScale.x = Mathf.Abs(vScale.x) * FacingDirection;
-        visor.localScale = vScale;
-
-        Vector3 aPos = attackSpawnPoint.localPosition;
-        aPos.x = Mathf.Abs(aPos.x) * FacingDirection;
-        attackSpawnPoint.localPosition = aPos;
+        attackSpawnPoint.localPosition = new Vector3(
+            Mathf.Abs(attackSpawnPoint.localPosition.x) * FacingDirection,
+            attackSpawnPoint.localPosition.y,
+            attackSpawnPoint.localPosition.z
+        );
     }
 
     /*

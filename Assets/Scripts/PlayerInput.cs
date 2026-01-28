@@ -21,6 +21,7 @@ public class PlayerInput: MonoBehaviour
         JumpPressed = Input.GetKeyDown(jumpButton);
         AttackPressed = Input.GetKeyDown(attack);
         SpecialPressed = Input.GetKeyDown(special);
+
     }
 
     
