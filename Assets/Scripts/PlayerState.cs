@@ -31,16 +31,15 @@ public class PlayerState : MonoBehaviour
     [SerializeField] Transform opponent;
 
     [Header("Combo")]
-    [SerializeField] float comboInputWindow = 0.2f;
-    [SerializeField] float comboResetDelay = 0.4f;
-    
-    int comboIndex = 0;
-    bool inputBuffered = false;
-    bool comboWindowOpen = false;
-    float lastAttackTime;
+    [SerializeField] float comboBufferTime = 0.3f;
 
+    bool isAttacking;
     bool comboBuffered;
-    bool comboLocked;
+    float comboBufferTimer;
+    int comboStep; 
+
+    int hashAttack;
+    int hashAttackIndex;
 
     // Back = -FacingDirection
     // Forward = +FacingDirection
@@ -55,21 +54,41 @@ public class PlayerState : MonoBehaviour
 
     GameObject activeHitbox;
 
+    int hashSpeed; 
+    int hashIsGrounded; 
+    int hashIsHoldingBack;
+
     void Awake() {
         input = GetComponent<PlayerInput>();
         movement = GetComponent<PlayerMovement>();
         blocking = GetComponent<PlayerBlocking>();
         character = GetComponent<Character>();
         animator = GetComponentInChildren<Animator>();
+        
+        hashSpeed = Animator.StringToHash("Speed"); 
+        hashIsGrounded = Animator.StringToHash("IsGrounded"); 
+        hashIsHoldingBack = Animator.StringToHash("IsHoldingBack");
+        hashAttack = Animator.StringToHash("Attack");
+        hashAttackIndex = Animator.StringToHash("AttackIndex");
     }
 
     void Start() {
         FacingDirection = transform.localScale.x >= 0 ? 1 : -1;
     }
 
-
     void Update() {
         UpdateFacing();
+
+        if (comboBuffered)
+        {
+            comboBufferTimer -= Time.deltaTime;
+            if (comboBufferTimer <= 0f)
+                comboBuffered = false;
+        }
+
+        animator.SetFloat(hashSpeed, Mathf.Abs(input.Horizontal)); 
+        animator.SetBool(hashIsGrounded, movement.isGrounded); 
+        animator.SetBool(hashIsHoldingBack, currentState == State.HoldingBack);
 
         if (currentState == State.Hitstun || currentState == State.BlockStun)
             return;
@@ -77,13 +96,13 @@ public class PlayerState : MonoBehaviour
         HandleBlocking();
         HandleMovement();
         HandleInputs();
-
-        ResetComboIfNeeded();
     }
 
     void HandleInputs() {
+
         if (input.AttackPressed)
             HandleAttackInput();
+
             
         if (input.SpecialPressed)
             Debug.Log("Special");
@@ -104,185 +123,77 @@ public class PlayerState : MonoBehaviour
             SetState(State.Idle);
     }
 
-    void HandleAttackInput() {
-        /*
-        if (!movement.isGrounded) {
-            SetState(State.AttackA);
-            character.OnAttackAir();
-            animator.SetTrigger("AttackAir");
-            return;
-        }
-        */
-        if (currentState == State.Idle) {
-            StartCombo();
-            return;
+    void HandleAttackInput()
+    {
+        if (CanAttack())
+        {
+            StartAttack(1);
         }
 
-        if (comboWindowOpen) {
-            inputBuffered = true;
+        else if (isAttacking && comboStep < 3)
+        {
+            comboBuffered = true;
+            comboBufferTimer = comboBufferTime;
         }
     }
 
-    private void StartCombo() {
-        comboIndex = 0;
-        inputBuffered = false;
-        animator.SetInteger("ComboIndex", comboIndex);
-        animator.SetTrigger("Attack");
-
-        SetState(State.Attack1);
-        character.OnAttack1();
-
-        lastAttackTime = Time.time;
+    private bool CanAttack() {
+        return !isAttacking && currentState == State.Idle;
     }
 
-    private void AdvanceCombo() {
-        comboIndex++;
-        inputBuffered = false;
 
-        animator.SetInteger("ComboIndex", comboIndex);
-        animator.SetTrigger("Attack");
+    void StartAttack(int step)
+    {
+        isAttacking = true;
+        comboStep = step;
+        comboBuffered = false;
 
-        if (comboIndex == 1) {
-            SetState(State.Attack2);
-            character.OnAttack2();
-        }
-        else if (comboIndex == 2) {
-            SetState(State.Attack3);
-            character.OnAttack3();
+        switch (step)
+        {
+            case 1: SetState(State.Attack1); character.OnAttack1(); break;
+            case 2: SetState(State.Attack2); character.OnAttack2(); break;
+            case 3: SetState(State.Attack3); character.OnAttack3(); break;
         }
 
-        lastAttackTime = Time.time;
+        animator.ResetTrigger(hashAttack);
+
+        animator.SetInteger(hashAttackIndex, step);
+        animator.SetTrigger(hashAttack);
     }
 
-    void ResetComboIfNeeded() {
-        if (currentState == State.Idle)
-            return;
-
-        if (Time.time - lastAttackTime > comboResetDelay) {
-            comboIndex = 0;
-            inputBuffered = false;
-        }
-    }
-
-    public void Anim_OpenComboWindow() {
-        comboWindowOpen = true;
-        inputBuffered = false;
-    }
-
-    public void Anim_CloseComboWindow() {
-        comboWindowOpen = false;
-    }
-
-    public void Anim_CheckCombo() {
-        if (inputBuffered && comboIndex < 2) {
-            AdvanceCombo();
-        }
-        else {
+    public void Anim_OnAttackEnd() {
+        Debug.Log($"Attack ended. ComboBuffered: {comboBuffered}, comboStep: {comboStep}");
+        if (comboBuffered && comboStep < 3) {
+            StartAttack(comboStep + 1);
+        } else {
             EndCombo();
         }
     }
 
-    public void Anim_EndAttack() {
-        EndCombo();
+    void EndCombo()
+    {
+        isAttacking = false;
+        comboBuffered = false;
+        comboStep = 0;
+        SetState(State.Idle);
+
+        animator.ResetTrigger(hashAttack);
+        animator.SetInteger(hashAttackIndex, 0);
     }
 
-    void EndCombo() {
-        comboIndex = 0;
-        inputBuffered = false;
-        comboWindowOpen = false;
-        SetState(State.Idle);
+    void CancelAttack()
+    {
+        isAttacking = false;
+        comboBuffered = false;
+        comboStep = 0;
+        Anim_EndHitbox();
     }
+
 
     void SetState(State newState) {
         currentState = newState;
     }
 
-    /*
-    void HandleSpecialInput() {
-        if (currentState != State.Idle && currentState != State.HoldingBack)
-            return;
-
-        bool airborne = !movement.isGrounded;
-
-        if (airborne) {
-            SetState(State.ASpecial);
-            character.AirSpecial();
-            animator.SetTrigger("SpecialA");
-        }
-        else if (blocking.WantsToBlock) {
-            SetState(State.BSpecial);
-            character.BackSpecial();
-            animator.SetTrigger("SpecialB");
-        }
-        else if (input.Horizontal * FacingDirection > 0) {
-            SetState(State.FSpecial);
-            character.ForwardSpecial();
-            animator.SetTrigger("SpecialF");
-        }
-        else {
-            SetState(State.NSpecial);
-            character.NeutralSpecial();
-            animator.SetTrigger("SpecialN");
-        }
-    }
-    */
-    
-    /*
-    void StartAttack1() {
-        SetState(State.Attack1);
-        comboBuffered = false;
-        character.OnAttack1();
-        animator.SetTrigger("Attack1");
-    }
-
-    void StartAttack2() {
-        SetState(State.Attack2);
-        comboBuffered = false;
-        character.OnAttack2();
-        animator.SetTrigger("Attack2");
-    }
-
-    void StartAttack3() {
-        SetState(State.Attack3);
-        comboBuffered = false;
-        comboLocked = true;
-        character.OnAttack3();
-        animator.SetTrigger("Attack3");
-    }
-
-    public void Anim_SpawnHitbox() {
-        activeHitbox = Instantiate(
-            attackHitboxPrefab,
-            attackSpawnPoint.position,
-            attackSpawnPoint.rotation
-        );
-        activeHitbox.GetComponent<PlayerAttack>().Init(this);
-    }
-
-    
-
-    public void Anim_OpenComboWindow() {
-        comboBuffered = false;
-    }
-
-    public void Anim_CheckCombo() {
-        if (!comboBuffered)
-            return;
-
-        if (currentState == State.Attack1)
-            StartAttack2();
-        else if (currentState == State.Attack2)
-            StartAttack3();
-    }
-
-    public void Anim_EndAttack() {
-        SetState(State.Idle);
-    }
-
-    public void Anim_UnlockCombo() {
-        comboLocked = false;
-    }
-    */
     public void TakeHit(Vector3 hitDirection) {
         if (currentState == State.Hitstun || currentState == State.BlockStun)
             return;
@@ -324,7 +235,6 @@ public class PlayerState : MonoBehaviour
         SetState(State.Idle);
     }
 
-
     private void TakeSpecialHit() {
         // When player gets hit by a special (that is not a projectile) they get KnockedDown. 
         // This means they need a second to recover to idle stance, during this time they can not be hit. 
@@ -335,12 +245,6 @@ public class PlayerState : MonoBehaviour
     private void TakeProjectileHit() {
         // When player gets hit by a projectile (they are usually spawned through special attacks) they just go into HitStun.
         Debug.Log($"{name} got hit by projectile");
-    }
-
-    void CancelAttack() {
-        comboBuffered = false;
-        comboLocked = false;
-        Anim_EndHitbox();
     }
 
     void UpdateFacing() {
