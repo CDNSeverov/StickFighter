@@ -16,7 +16,8 @@ public class PlayerState : MonoBehaviour
         KnockedDown,
         Recovery,
         HoldingBack,
-        BlockStun
+        BlockStun,
+        ComboWindow
     }
 
     [Header("Combat")]
@@ -31,8 +32,10 @@ public class PlayerState : MonoBehaviour
     [SerializeField] Transform opponent;
 
     [Header("Combo")]
-    [SerializeField] float comboBufferTime = 0.3f;
+    [SerializeField] float comboBufferTime = 0.4f;
+    [SerializeField] float comboWindowDuration = 0.25f;
 
+    float comboWindowTimer;
     bool isAttacking;
     bool comboBuffered;
     float comboBufferTimer;
@@ -96,6 +99,7 @@ public class PlayerState : MonoBehaviour
         HandleBlocking();
         HandleMovement();
         HandleInputs();
+        HandleComboWindow();
     }
 
     void HandleInputs() {
@@ -125,15 +129,12 @@ public class PlayerState : MonoBehaviour
 
     void HandleAttackInput()
     {
-        if (CanAttack())
+        comboBuffered = true;
+        comboBufferTimer = comboBufferTime;
+
+        if (currentState == State.Idle)
         {
             StartAttack(1);
-        }
-
-        else if (isAttacking && comboStep < 3)
-        {
-            comboBuffered = true;
-            comboBufferTimer = comboBufferTime;
         }
     }
 
@@ -144,30 +145,60 @@ public class PlayerState : MonoBehaviour
 
     void StartAttack(int step)
     {
-        isAttacking = true;
-        comboStep = step;
+        if (isAttacking) {
+            return;
+        }
+
         comboBuffered = false;
+        comboStep = step;
+        isAttacking = true;
 
         switch (step)
         {
-            case 1: SetState(State.Attack1); character.OnAttack1(); break;
-            case 2: SetState(State.Attack2); character.OnAttack2(); break;
-            case 3: SetState(State.Attack3); character.OnAttack3(); break;
+            case 1:
+                currentState = State.Attack1;
+                animator.CrossFade("Attack1", 0.05f);
+                break;
+
+            case 2:
+                currentState = State.Attack2;
+                animator.CrossFade("Attack2", 0.05f);
+                break;
+
+            case 3:
+                currentState = State.Attack3;
+                animator.CrossFade("Attack3", 0.05f);
+                break;
         }
-
-        animator.ResetTrigger(hashAttack);
-
-        animator.SetInteger(hashAttackIndex, step);
-        animator.SetTrigger(hashAttack);
     }
 
-    public void Anim_OnAttackEnd() {
-        Debug.Log($"Attack ended. ComboBuffered: {comboBuffered}, comboStep: {comboStep}");
-        if (comboBuffered && comboStep < 3) {
+    void HandleComboWindow()
+    {
+        if (currentState != State.ComboWindow)
+            return;
+
+        comboWindowTimer -= Time.deltaTime;
+
+        if (comboBuffered && comboStep < 3)
+        {
+            comboBuffered = false;
             StartAttack(comboStep + 1);
-        } else {
-            EndCombo();
+            return;
         }
+
+        if (comboWindowTimer <= 0f)
+        {
+            comboBuffered = false;
+            comboStep = 0;
+            currentState = State.Idle;
+        }
+    }
+
+
+    public void Anim_OnAttackEnd() {
+        isAttacking = false;
+        currentState = State.ComboWindow;
+        comboWindowTimer = comboWindowDuration;
     }
 
     void EndCombo()

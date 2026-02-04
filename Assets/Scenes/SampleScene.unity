@@ -241,7 +241,7 @@ MonoBehaviour:
   graphics: {fileID: 988179454}
   visor: {fileID: 1726545768}
   opponent: {fileID: 1832326830}
-  comboBufferTime: 0.3
+  comboBufferTime: 12.84
 --- !u!114 &103458975
 MonoBehaviour:
   m_ObjectHideFlags: 0
