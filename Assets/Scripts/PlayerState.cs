@@ -32,7 +32,12 @@ public class PlayerState : MonoBehaviour
 
     [Header("Combo")]
     [SerializeField] float comboInputWindow = 0.2f;
-    [SerializeField] float comboResetDelay = 0.5f;
+    [SerializeField] float comboResetDelay = 0.4f;
+    
+    int comboIndex = 0;
+    bool inputBuffered = false;
+    bool comboWindowOpen = false;
+    float lastAttackTime;
 
     bool comboBuffered;
     bool comboLocked;
@@ -55,7 +60,7 @@ public class PlayerState : MonoBehaviour
         movement = GetComponent<PlayerMovement>();
         blocking = GetComponent<PlayerBlocking>();
         character = GetComponent<Character>();
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     void Start() {
@@ -65,7 +70,6 @@ public class PlayerState : MonoBehaviour
 
     void Update() {
         UpdateFacing();
-        animator.SetInteger("State", (int)currentState);
 
         if (currentState == State.Hitstun || currentState == State.BlockStun)
             return;
@@ -73,14 +77,17 @@ public class PlayerState : MonoBehaviour
         HandleBlocking();
         HandleMovement();
         HandleInputs();
+
+        ResetComboIfNeeded();
     }
 
     void HandleInputs() {
         if (input.AttackPressed)
             HandleAttackInput();
-
+            
         if (input.SpecialPressed)
-            HandleSpecialInput();
+            Debug.Log("Special");
+            //HandleSpecialInput();
     }
 
     void HandleMovement() {
@@ -97,6 +104,100 @@ public class PlayerState : MonoBehaviour
             SetState(State.Idle);
     }
 
+    void HandleAttackInput() {
+        /*
+        if (!movement.isGrounded) {
+            SetState(State.AttackA);
+            character.OnAttackAir();
+            animator.SetTrigger("AttackAir");
+            return;
+        }
+        */
+        if (currentState == State.Idle) {
+            StartCombo();
+            return;
+        }
+
+        if (comboWindowOpen) {
+            inputBuffered = true;
+        }
+    }
+
+    private void StartCombo() {
+        comboIndex = 0;
+        inputBuffered = false;
+        animator.SetInteger("ComboIndex", comboIndex);
+        animator.SetTrigger("Attack");
+
+        SetState(State.Attack1);
+        character.OnAttack1();
+
+        lastAttackTime = Time.time;
+    }
+
+    private void AdvanceCombo() {
+        comboIndex++;
+        inputBuffered = false;
+
+        animator.SetInteger("ComboIndex", comboIndex);
+        animator.SetTrigger("Attack");
+
+        if (comboIndex == 1) {
+            SetState(State.Attack2);
+            character.OnAttack2();
+        }
+        else if (comboIndex == 2) {
+            SetState(State.Attack3);
+            character.OnAttack3();
+        }
+
+        lastAttackTime = Time.time;
+    }
+
+    void ResetComboIfNeeded() {
+        if (currentState == State.Idle)
+            return;
+
+        if (Time.time - lastAttackTime > comboResetDelay) {
+            comboIndex = 0;
+            inputBuffered = false;
+        }
+    }
+
+    public void Anim_OpenComboWindow() {
+        comboWindowOpen = true;
+        inputBuffered = false;
+    }
+
+    public void Anim_CloseComboWindow() {
+        comboWindowOpen = false;
+    }
+
+    public void Anim_CheckCombo() {
+        if (inputBuffered && comboIndex < 2) {
+            AdvanceCombo();
+        }
+        else {
+            EndCombo();
+        }
+    }
+
+    public void Anim_EndAttack() {
+        EndCombo();
+    }
+
+    void EndCombo() {
+        comboIndex = 0;
+        inputBuffered = false;
+        comboWindowOpen = false;
+        SetState(State.Idle);
+    }
+
+    void SetState(State newState) {
+        currentState = newState;
+    }
+
+    /*
     void HandleSpecialInput() {
         if (currentState != State.Idle && currentState != State.HoldingBack)
             return;
@@ -106,49 +207,39 @@ public class PlayerState : MonoBehaviour
         if (airborne) {
             SetState(State.ASpecial);
             character.AirSpecial();
+            animator.SetTrigger("SpecialA");
         }
         else if (blocking.WantsToBlock) {
             SetState(State.BSpecial);
             character.BackSpecial();
+            animator.SetTrigger("SpecialB");
         }
         else if (input.Horizontal * FacingDirection > 0) {
             SetState(State.FSpecial);
             character.ForwardSpecial();
+            animator.SetTrigger("SpecialF");
         }
         else {
             SetState(State.NSpecial);
             character.NeutralSpecial();
-        }
-
-        animator.SetTrigger("Special");
-    }
-
-    void HandleAttackInput() {
-        if (comboLocked)
-            return;
-
-        if (currentState == State.Idle) {
-            StartAttack1();
-            return;
-        }
-
-        if (currentState == State.Attack1 || currentState == State.Attack2) {
-            comboBuffered = true;
+            animator.SetTrigger("SpecialN");
         }
     }
-
+    */
+    
+    /*
     void StartAttack1() {
         SetState(State.Attack1);
         comboBuffered = false;
         character.OnAttack1();
-        animator.SetTrigger("Attack");
+        animator.SetTrigger("Attack1");
     }
 
     void StartAttack2() {
         SetState(State.Attack2);
         comboBuffered = false;
         character.OnAttack2();
-        animator.SetTrigger("Attack");
+        animator.SetTrigger("Attack2");
     }
 
     void StartAttack3() {
@@ -156,7 +247,7 @@ public class PlayerState : MonoBehaviour
         comboBuffered = false;
         comboLocked = true;
         character.OnAttack3();
-        animator.SetTrigger("Attack");
+        animator.SetTrigger("Attack3");
     }
 
     public void Anim_SpawnHitbox() {
@@ -168,10 +259,7 @@ public class PlayerState : MonoBehaviour
         activeHitbox.GetComponent<PlayerAttack>().Init(this);
     }
 
-    public void Anim_EndHitbox() {
-        if (activeHitbox != null)
-            Destroy(activeHitbox);
-    }
+    
 
     public void Anim_OpenComboWindow() {
         comboBuffered = false;
@@ -194,7 +282,7 @@ public class PlayerState : MonoBehaviour
     public void Anim_UnlockCombo() {
         comboLocked = false;
     }
-
+    */
     public void TakeHit(Vector3 hitDirection) {
         if (currentState == State.Hitstun || currentState == State.BlockStun)
             return;
@@ -223,6 +311,11 @@ public class PlayerState : MonoBehaviour
         animator.SetTrigger("BlockHit");
     }
 
+    public void Anim_EndHitbox() {
+        if (activeHitbox != null)
+            Destroy(activeHitbox);
+    }
+
     public void Anim_EndHitstun() {
         SetState(State.Idle);
     }
@@ -248,10 +341,6 @@ public class PlayerState : MonoBehaviour
         comboBuffered = false;
         comboLocked = false;
         Anim_EndHitbox();
-    }
-
-    void SetState(State newState) {
-        currentState = newState;
     }
 
     void UpdateFacing() {
