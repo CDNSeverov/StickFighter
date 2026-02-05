@@ -41,8 +41,17 @@ public class PlayerState : MonoBehaviour
     float comboBufferTimer;
     int comboStep; 
 
+    [Header("Hitstun")]
+    [SerializeField] float hitstunDuration = 0.25f;
+    [SerializeField] float blockstunDuration = 0.18f;
+
+    float hitstunTimer;
+
     int hashAttack;
     int hashAttackIndex;
+    int hashAttackAir;
+    int hashHit;
+    int hashBlockHit;
 
     // Back = -FacingDirection
     // Forward = +FacingDirection
@@ -73,6 +82,9 @@ public class PlayerState : MonoBehaviour
         hashIsHoldingBack = Animator.StringToHash("IsHoldingBack");
         hashAttack = Animator.StringToHash("Attack");
         hashAttackIndex = Animator.StringToHash("AttackIndex");
+        hashAttackAir = Animator.StringToHash("AttackAir");
+        hashHit = Animator.StringToHash("Hit");
+        hashBlockHit = Animator.StringToHash("BlockHit");
     }
 
     void Start() {
@@ -89,6 +101,22 @@ public class PlayerState : MonoBehaviour
                 comboBuffered = false;
         }
 
+        if (currentState == State.Hitstun)
+        {
+            hitstunTimer -= Time.deltaTime;
+            if (hitstunTimer <= 0f)
+                ExitHitstun();
+            return;
+        }
+
+        if (currentState == State.BlockStun)
+        {
+            hitstunTimer -= Time.deltaTime;
+            if (hitstunTimer <= 0f)
+                ExitBlockstun();
+            return;
+        }
+
         animator.SetFloat(hashSpeed, Mathf.Abs(input.Horizontal)); 
         animator.SetBool(hashIsGrounded, movement.isGrounded); 
         animator.SetBool(hashIsHoldingBack, currentState == State.HoldingBack);
@@ -96,8 +124,10 @@ public class PlayerState : MonoBehaviour
         if (currentState == State.Hitstun || currentState == State.BlockStun)
             return;
 
+        if (!isAttacking) {
+            HandleMovement();
+        }
         HandleBlocking();
-        HandleMovement();
         HandleInputs();
         HandleComboWindow();
     }
@@ -127,8 +157,13 @@ public class PlayerState : MonoBehaviour
             SetState(State.Idle);
     }
 
-    void HandleAttackInput()
-    {
+    void HandleAttackInput() {
+        if (!movement.isGrounded && !isAttacking)
+        {
+            StartAirAttack();
+            return;
+        }
+
         comboBuffered = true;
         comboBufferTimer = comboBufferTime;
 
@@ -137,6 +172,7 @@ public class PlayerState : MonoBehaviour
             StartAttack(1);
         }
     }
+
 
     private bool CanAttack() {
         return !isAttacking && currentState == State.Idle;
@@ -158,19 +194,36 @@ public class PlayerState : MonoBehaviour
             case 1:
                 currentState = State.Attack1;
                 animator.CrossFade("Attack1", 0.05f);
+                character.OnAttack1();
                 break;
 
             case 2:
                 currentState = State.Attack2;
                 animator.CrossFade("Attack2", 0.05f);
+                character.OnAttack2();
                 break;
 
             case 3:
                 currentState = State.Attack3;
                 animator.CrossFade("Attack3", 0.05f);
+                character.OnAttack3();
                 break;
         }
     }
+
+    void StartAirAttack() {
+        isAttacking = true;
+        comboBuffered = false;
+        comboStep = 0;
+
+        currentState = State.AttackA;
+
+        animator.ResetTrigger(hashAttackAir);
+        animator.SetTrigger(hashAttackAir);
+
+        character.OnAttackAir();
+    }
+
 
     void HandleComboWindow()
     {
@@ -241,29 +294,43 @@ public class PlayerState : MonoBehaviour
 
     void TakeNormalHit(Vector3 hitDir) {
         SetState(State.Hitstun);
+
+        hitstunTimer = hitstunDuration;
+
         movement.ResetVelocity();
-        movement.ApplyKnockback(hitDir.x * knockbackForce, launchForce);
-        animator.SetTrigger("Hit");
+        movement.ApplyKnockback(hitDir.x * knockbackForce, 0f);
+
+        animator.ResetTrigger(hashHit);
+        animator.SetTrigger(hashHit);
     }
+
 
     void TakeBlockHit(Vector3 hitDir) {
         SetState(State.BlockStun);
+
+        hitstunTimer = blockstunDuration;
+
         movement.ResetVelocity();
         movement.ApplyKnockback(hitDir.x * knockbackForce * 0.3f, 0f);
-        animator.SetTrigger("BlockHit");
+
+        animator.ResetTrigger(hashBlockHit);
+        animator.SetTrigger(hashBlockHit);
     }
+
+    void ExitHitstun() {
+        hitstunTimer = 0f;
+        SetState(State.Idle);
+    }
+
+    void ExitBlockstun() {
+        hitstunTimer = 0f;
+        SetState(State.Idle);
+    }
+
 
     public void Anim_EndHitbox() {
         if (activeHitbox != null)
             Destroy(activeHitbox);
-    }
-
-    public void Anim_EndHitstun() {
-        SetState(State.Idle);
-    }
-
-    public void Anim_EndBlockstun() {
-        SetState(State.Idle);
     }
 
     private void TakeSpecialHit() {
@@ -276,6 +343,23 @@ public class PlayerState : MonoBehaviour
     private void TakeProjectileHit() {
         // When player gets hit by a projectile (they are usually spawned through special attacks) they just go into HitStun.
         Debug.Log($"{name} got hit by projectile");
+    }
+
+    public void SpawnHitbox(GameObject prefab, float duration) {
+        if (activeHitbox != null) {
+            Destroy(activeHitbox);
+        }
+
+        activeHitbox = Instantiate(prefab, attackSpawnPoint.position, attackSpawnPoint.rotation, transform);
+
+        PlayerAttack atk = activeHitbox.GetComponent<PlayerAttack>();
+        atk.Init(this);
+
+        Invoke(nameof(Anim_EndHitbox), duration);
+    }
+
+    public void PushForward(float force) {
+        movement.ApplyKnockback(force * FacingDirection, 0f);
     }
 
     void UpdateFacing() {

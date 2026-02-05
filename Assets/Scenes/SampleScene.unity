@@ -242,6 +242,9 @@ MonoBehaviour:
   visor: {fileID: 1726545768}
   opponent: {fileID: 1832326830}
   comboBufferTime: 12.84
+  comboWindowDuration: 0.25
+  hitstunDuration: 0.25
+  blockstunDuration: 0.18
 --- !u!114 &103458975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,6 +269,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e12bdf1509a1b994f950ca2dcb6a0294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Brawler
+  attack1Hitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
+  attack2Hitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
+  attack3Hitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
+  attackAirHitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
 --- !u!1 &163790809
 GameObject:
   m_ObjectHideFlags: 0
@@ -2646,6 +2653,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 763671cccfcd9314aae31278bb8d6fff, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1582826891}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 763671cccfcd9314aae31278bb8d6fff, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1582826892}
   m_SourcePrefab: {fileID: 100100000, guid: 763671cccfcd9314aae31278bb8d6fff, type: 3}
 --- !u!4 &1582826889 stripped
 Transform:
@@ -2679,6 +2689,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1582826892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582826890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35f106c4958a2514f86711850378a779, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventForwarder
+  owner: {fileID: 0}
 --- !u!1 &1726545767
 GameObject:
   m_ObjectHideFlags: 0
@@ -2916,7 +2939,6 @@ GameObject:
   - component: {fileID: 1832326836}
   - component: {fileID: 1832326838}
   - component: {fileID: 1832326839}
-  - component: {fileID: 1832326840}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: Player2
@@ -2988,6 +3010,9 @@ MonoBehaviour:
   visor: {fileID: 1761944304}
   opponent: {fileID: 103458965}
   comboBufferTime: 0.3
+  comboWindowDuration: 0.25
+  hitstunDuration: 0.25
+  blockstunDuration: 0.18
 --- !u!114 &1832326836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3049,28 +3074,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e12bdf1509a1b994f950ca2dcb6a0294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Brawler
---- !u!95 &1832326840
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1832326827}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  attack1Hitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
+  attack2Hitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
+  attack3Hitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
+  attackAirHitbox: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
