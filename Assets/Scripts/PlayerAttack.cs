@@ -4,6 +4,7 @@ public class PlayerAttack : MonoBehaviour
 {
     private PlayerState owner;
     bool hasHit;
+    [SerializeField] bool isSpecialHit;
 
     public void Init(PlayerState player) {
         owner = player;
@@ -25,7 +26,10 @@ public class PlayerAttack : MonoBehaviour
 
         Vector3 hitDirection = (other.transform.position - owner.transform.position).normalized;
 
-        target.TakeHit(hitDirection);
+        if (isSpecialHit)
+            target.TakeSpecialHit();
+        else
+            target.TakeHit(hitDirection);
 
         Debug.Log($"{other.name} was hit");
     }

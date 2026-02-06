@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerState : MonoBehaviour
 {
@@ -94,6 +95,8 @@ public class PlayerState : MonoBehaviour
     void Update() {
         UpdateFacing();
 
+        //Debug.Log(currentState);
+
         if (comboBuffered)
         {
             comboBufferTimer -= Time.deltaTime;
@@ -132,32 +135,31 @@ public class PlayerState : MonoBehaviour
         HandleComboWindow();
     }
 
-    void HandleInputs() {
+    private void HandleInputs() {
 
         if (input.AttackPressed)
             HandleAttackInput();
 
             
         if (input.SpecialPressed)
-            Debug.Log("Special");
-            //HandleSpecialInput();
+            HandleSpecialInput();
     }
 
-    void HandleMovement() {
+    private void HandleMovement() {
         movement.Move(input.Horizontal);
 
         if (input.JumpPressed)
             movement.Jump(input.Horizontal);
     }
 
-    void HandleBlocking() {
+    private void HandleBlocking() {
         if (currentState == State.Idle && blocking.WantsToBlock)
             SetState(State.HoldingBack);
         else if (currentState == State.HoldingBack && !blocking.WantsToBlock)
             SetState(State.Idle);
     }
 
-    void HandleAttackInput() {
+    private void HandleAttackInput() {
         if (!movement.isGrounded && !isAttacking)
         {
             StartAirAttack();
@@ -171,6 +173,40 @@ public class PlayerState : MonoBehaviour
         {
             StartAttack(1);
         }
+    }
+
+    private void HandleSpecialInput() {
+        if (!CanSpecial())
+            return;
+
+        if (!movement.isGrounded)
+        {
+            StartAirSpecial();
+            return;
+        }
+
+        if (currentState == State.HoldingBack)
+        {
+            StartBackSpecial();
+            return;
+        }
+
+        if (Mathf.Abs(input.Horizontal) > 0.1f)
+        {
+            float dir = input.Horizontal * FacingDirection;
+
+            if (dir > 0f)
+            {
+                StartForwardSpecial();
+                return;
+            }
+        }
+
+        StartNeutralSpecial();
+    }
+
+    private bool CanSpecial() {
+        return (currentState == State.Idle || currentState == State.HoldingBack) && !isAttacking;
     }
 
 
@@ -224,6 +260,37 @@ public class PlayerState : MonoBehaviour
         character.OnAttackAir();
     }
 
+    void StartNeutralSpecial() {
+        isAttacking = true;
+        currentState = State.NSpecial;
+
+        animator.CrossFade("NSpecial", 0.05f);
+        character.NeutralSpecial();
+    }
+
+    void StartForwardSpecial() {
+        isAttacking = true;
+        currentState = State.FSpecial;
+
+        animator.CrossFade("FSpecial", 0.05f);
+        character.ForwardSpecial();
+    }
+
+    void StartBackSpecial() {
+        isAttacking = true;
+        currentState = State.BSpecial;
+
+        animator.CrossFade("BSpecial", 0.05f);
+        character.BackSpecial();
+    }
+
+    void StartAirSpecial() {
+        isAttacking = true;
+        currentState = State.ASpecial;
+
+        animator.CrossFade("ASpecial", 0.05f);
+        character.AirSpecial();
+    }
 
     void HandleComboWindow()
     {
@@ -252,6 +319,15 @@ public class PlayerState : MonoBehaviour
         isAttacking = false;
         currentState = State.ComboWindow;
         comboWindowTimer = comboWindowDuration;
+    }
+
+    public void Anim_OnSpecialEnd() {
+        isAttacking = false;
+
+        if (movement.isGrounded)
+            SetState(State.Idle);
+        else
+            SetState(State.Idle);
     }
 
     void EndCombo()
@@ -333,17 +409,50 @@ public class PlayerState : MonoBehaviour
             Destroy(activeHitbox);
     }
 
-    private void TakeSpecialHit() {
-        // When player gets hit by a special (that is not a projectile) they get KnockedDown. 
-        // This means they need a second to recover to idle stance, during this time they can not be hit. 
-        // During the recovery process they are in the Recovery state.
-        Debug.Log($"{name} got hit by special");
+    public void TakeSpecialHit() {
+        if (currentState == State.KnockedDown || currentState == State.Recovery)
+            return;
+
+        CancelAttack();
+
+        currentState = State.KnockedDown;
+
+        movement.ResetVelocity();
+        movement.ApplyKnockback(-FacingDirection * knockbackForce, launchForce);
+
+        animator.CrossFade("Knockdown", 0.05f);
+
+        Invoke(nameof(EnterRecovery), 0.6f);
     }
 
-    private void TakeProjectileHit() {
-        // When player gets hit by a projectile (they are usually spawned through special attacks) they just go into HitStun.
-        Debug.Log($"{name} got hit by projectile");
+    void EnterRecovery() {
+        currentState = State.Recovery;
+        animator.CrossFade("Recovery", 0.05f);
+
+        Invoke(nameof(ExitRecovery), 0.6f);
     }
+
+    void ExitRecovery() {
+        SetState(State.Idle);
+    }
+
+
+    public void TakeProjectileHit() {
+        if (currentState == State.Hitstun || currentState == State.BlockStun)
+            return;
+
+        CancelAttack();
+
+        SetState(State.Hitstun);
+        hitstunTimer = hitstunDuration;
+
+        movement.ResetVelocity();
+        movement.ApplyKnockback(-FacingDirection * knockbackForce * 0.5f, 0f);
+
+        animator.ResetTrigger(hashHit);
+        animator.SetTrigger(hashHit);
+    }
+
 
     public void SpawnHitbox(GameObject prefab, float duration) {
         if (activeHitbox != null) {
@@ -358,11 +467,21 @@ public class PlayerState : MonoBehaviour
         Invoke(nameof(Anim_EndHitbox), duration);
     }
 
+    public void SpawnHitboxDelayed(GameObject prefab, float delay, float duration) {
+        StartCoroutine(SpawnHitboxDelayedRoutine(prefab, delay, duration));
+    }
+
+    private IEnumerator SpawnHitboxDelayedRoutine(GameObject prefab, float delay, float duration) {
+        yield return new WaitForSeconds(delay);
+        SpawnHitbox(prefab, duration);
+    }
+
+
     public void PushForward(float force) {
         movement.ApplyKnockback(force * FacingDirection, 0f);
     }
 
-    void UpdateFacing() {
+    private void UpdateFacing() {
         if (opponent == null || !movement.isGrounded)
             return;
 
@@ -378,7 +497,15 @@ public class PlayerState : MonoBehaviour
         FlipVisuals();
     }
 
-    void FlipVisuals() {
+    public void ApplyKnockBack(float x, float y) {
+        movement.ApplyKnockback(x, y);
+    }
+
+    public void ResetVelocity() {
+        movement.ResetVelocity();
+    }
+
+    private void FlipVisuals() {
         graphics.localScale = new Vector3(
             Mathf.Abs(graphics.localScale.x) * FacingDirection,
             graphics.localScale.y,

@@ -9,4 +9,10 @@ public class AnimationEventForwarder : MonoBehaviour
         if (owner != null)
             owner.Anim_OnAttackEnd();
     }
+
+    public void Anim_OnSpecialEnd()
+    {
+        if (owner != null)
+            owner.Anim_OnSpecialEnd();
+    }
 }
