@@ -54,6 +54,14 @@ public class PlayerState : MonoBehaviour
     int hashHit;
     int hashBlockHit;
 
+    [Header("Knockdown")]
+    [SerializeField] float knockdownDuration = 0.6f;
+    [SerializeField] float recoveryDuration = 0.6f;
+
+    float knockdownTimer;
+    float recoveryTimer;
+    int hashKnockDown;
+
     // Back = -FacingDirection
     // Forward = +FacingDirection
     public int FacingDirection { get; private set; }
@@ -85,6 +93,7 @@ public class PlayerState : MonoBehaviour
         hashAttackIndex = Animator.StringToHash("AttackIndex");
         hashAttackAir = Animator.StringToHash("AttackAir");
         hashHit = Animator.StringToHash("Hit");
+        hashKnockDown = Animator.StringToHash("KnockDown");
         hashBlockHit = Animator.StringToHash("BlockHit");
     }
 
@@ -109,6 +118,22 @@ public class PlayerState : MonoBehaviour
             hitstunTimer -= Time.deltaTime;
             if (hitstunTimer <= 0f)
                 ExitHitstun();
+            return;
+        }
+
+        if (currentState == State.KnockedDown)
+        {
+            knockdownTimer -= Time.deltaTime;
+            if (knockdownTimer <= 0f)
+                EnterRecovery();
+            return;
+        }
+
+        if (currentState == State.Recovery)
+        {
+            recoveryTimer -= Time.deltaTime;
+            if (recoveryTimer <= 0f)
+                ExitRecovery();
             return;
         }
 
@@ -409,33 +434,35 @@ public class PlayerState : MonoBehaviour
             Destroy(activeHitbox);
     }
 
-    public void TakeSpecialHit() {
+    public void TakeSpecialHit(Vector3 hitDir) {
         if (currentState == State.KnockedDown || currentState == State.Recovery)
             return;
 
         CancelAttack();
 
-        currentState = State.KnockedDown;
+        SetState(State.KnockedDown);
+
+        knockdownTimer = knockdownDuration;
 
         movement.ResetVelocity();
-        movement.ApplyKnockback(-FacingDirection * knockbackForce, launchForce);
+        movement.ApplyKnockback(hitDir.x * knockbackForce, 0f);
 
-        animator.CrossFade("Knockdown", 0.05f);
-
-        Invoke(nameof(EnterRecovery), 0.6f);
+        animator.ResetTrigger(hashKnockDown);
+        animator.SetTrigger(hashKnockDown);
     }
 
-    void EnterRecovery() {
-        currentState = State.Recovery;
-        animator.CrossFade("Recovery", 0.05f);
 
-        Invoke(nameof(ExitRecovery), 0.6f);
+    void EnterRecovery() {
+        SetState(State.Recovery);
+        recoveryTimer = recoveryDuration;
+
+        animator.CrossFade("Recovery", 0.05f);
     }
 
     void ExitRecovery() {
+        recoveryTimer = 0f;
         SetState(State.Idle);
     }
-
 
     public void TakeProjectileHit() {
         if (currentState == State.Hitstun || currentState == State.BlockStun)

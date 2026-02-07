@@ -27,7 +27,7 @@ public class PlayerAttack : MonoBehaviour
         Vector3 hitDirection = (other.transform.position - owner.transform.position).normalized;
 
         if (isSpecialHit)
-            target.TakeSpecialHit();
+            target.TakeSpecialHit(hitDirection);
         else
             target.TakeHit(hitDirection);
 

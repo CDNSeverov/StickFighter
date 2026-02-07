@@ -245,6 +245,8 @@ MonoBehaviour:
   comboWindowDuration: 0.25
   hitstunDuration: 0.25
   blockstunDuration: 0.18
+  knockdownDuration: 0.6
+  recoveryDuration: 0.4
 --- !u!114 &103458975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,9 +276,9 @@ MonoBehaviour:
   attack3Hitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
   attackAirHitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
   fireballPrefab: {fileID: 3424752232364136134, guid: 96e8e2aedb9ca3546a7153aea1c17c6e, type: 3}
-  fSpecialHitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
-  bSpecialHitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
-  aSpecialHitbox: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
+  fSpecialHitbox: {fileID: 118092326330230623, guid: 7163a2723baa2f14bbddf475fbc79fe5, type: 3}
+  bSpecialHitbox: {fileID: 118092326330230623, guid: 7163a2723baa2f14bbddf475fbc79fe5, type: 3}
+  aSpecialHitbox: {fileID: 118092326330230623, guid: 7163a2723baa2f14bbddf475fbc79fe5, type: 3}
 --- !u!1 &163790809
 GameObject:
   m_ObjectHideFlags: 0
@@ -1925,7 +1927,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &602342709
 Transform:
   m_ObjectHideFlags: 0
@@ -3017,6 +3019,8 @@ MonoBehaviour:
   comboWindowDuration: 0.25
   hitstunDuration: 0.25
   blockstunDuration: 0.18
+  knockdownDuration: 0.6
+  recoveryDuration: 0.4
 --- !u!114 &1832326836
 MonoBehaviour:
   m_ObjectHideFlags: 0
