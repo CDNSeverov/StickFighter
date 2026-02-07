@@ -62,6 +62,9 @@ public class PlayerState : MonoBehaviour
     float recoveryTimer;
     int hashKnockDown;
 
+    public bool IsUnhittable => currentState == State.KnockedDown || currentState == State.Recovery;
+
+
     // Back = -FacingDirection
     // Forward = +FacingDirection
     public int FacingDirection { get; private set; }

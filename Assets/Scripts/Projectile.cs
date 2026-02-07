@@ -24,7 +24,9 @@ public class Projectile : MonoBehaviour
         PlayerState target = other.GetComponent<PlayerState>();
         if (target == null) return;
 
-        // Prevent self-hit
+        if (target.IsUnhittable)
+            return;
+
         if (target.GetComponent<Character>() == owner)
             return;
 

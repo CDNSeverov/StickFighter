@@ -22,6 +22,9 @@ public class PlayerAttack : MonoBehaviour
             return;
         }
 
+        if (target.IsUnhittable)
+            return;
+
         hasHit = true;
 
         Vector3 hitDirection = (other.transform.position - owner.transform.position).normalized;
