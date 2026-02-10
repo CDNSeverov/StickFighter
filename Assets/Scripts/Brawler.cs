@@ -1,8 +1,9 @@
 using UnityEngine;
+using System.Collections;   
 
 public class Brawler : Character
 {
-    [Header("Hitboxes")]
+    [Header("Hitboxes")] // draw these
     [SerializeField] GameObject attack1Hitbox;
     [SerializeField] GameObject attack2Hitbox;
     [SerializeField] GameObject attack3Hitbox;
@@ -21,22 +22,28 @@ public class Brawler : Character
     public override void OnAttack2() {
         Debug.Log("Brawler Attack 2");
         state.PushForward(7f);
-        state.SpawnHitbox(attack2Hitbox, 0.16f);
+        state.SpawnHitboxDelayed(attack2Hitbox, 0.3f, 0.16f);
     }
 
     public override void OnAttack3() {
         Debug.Log("Brawler Attack 3");
         state.PushForward(7f);
-        state.SpawnHitbox(attack3Hitbox, 0.18f);
+        state.SpawnHitboxDelayed(attack3Hitbox, 0.3f, 0.18f);
     }
 
     public override void OnAttackAir() {
         Debug.Log("Brawler Attack Air");
-        state.SpawnHitbox(attackAirHitbox, 0.18f);
+        state.SpawnHitboxDelayed(attackAirHitbox, 0.3f, 0.18f);
     }
 
     public override void NeutralSpecial() {
         Debug.Log("Brawler Neutral Special");
+
+        StartCoroutine(NeutralSpecialRoutine());
+    }
+
+    private IEnumerator NeutralSpecialRoutine() {
+        yield return new WaitForSeconds(0.6f);
 
         GameObject fireball = Instantiate(fireballPrefab, state.transform.position + Vector3.right * state.FacingDirection * 1.2f, Quaternion.identity);
 
@@ -46,8 +53,13 @@ public class Brawler : Character
     public override void ForwardSpecial() {
         Debug.Log("Brawler Forward Special");
 
-        state.PushForward(3f);
-        state.SpawnHitboxDelayed(fSpecialHitbox, 0.15f, 0.25f); 
+        state.PushForward(4f);
+        state.SpawnHitboxDelayed(fSpecialHitbox, 0.2f, 0.5f); 
+        StartCoroutine(ForwardSpecialRoutine());
+    }
+
+    private IEnumerator ForwardSpecialRoutine() {
+        yield return new WaitForSeconds(0.2f);
         state.ApplyKnockBack(5f * state.FacingDirection, 10f);
     }
 
@@ -55,7 +67,7 @@ public class Brawler : Character
         Debug.Log("Brawler Back Special");
 
         state.PushForward(17f);
-        state.SpawnHitboxDelayed(bSpecialHitbox, 0.18f, 0.35f);
+        state.SpawnHitboxDelayed(bSpecialHitbox, 0.2f, 0.3f);
     }
 
 
@@ -64,7 +76,7 @@ public class Brawler : Character
 
         state.ResetVelocity();
 
-        state.SpawnHitboxDelayed(aSpecialHitbox, 0.12f, 0.3f);
+        state.SpawnHitboxDelayed(aSpecialHitbox, 0.4f, 0.4f);
         state.ApplyKnockBack(13f * state.FacingDirection, -6f);
     }
 

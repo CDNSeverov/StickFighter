@@ -76,7 +76,7 @@ public class PlayerState : MonoBehaviour
     Character character;
     Animator animator;
 
-    GameObject activeHitbox;
+    GameObject activeHitbox; // draw this
 
     int hashSpeed; 
     int hashIsGrounded; 
@@ -105,9 +105,9 @@ public class PlayerState : MonoBehaviour
     }
 
     void Update() {
-        UpdateFacing();
 
         //Debug.Log(currentState);
+        HandleFacing();
 
         if (comboBuffered)
         {
@@ -511,22 +511,6 @@ public class PlayerState : MonoBehaviour
         movement.ApplyKnockback(force * FacingDirection, 0f);
     }
 
-    private void UpdateFacing() {
-        if (opponent == null || !movement.isGrounded)
-            return;
-
-        float diff = opponent.position.x - transform.position.x;
-        if (Mathf.Abs(diff) < 0.05f)
-            return;
-
-        int newFacing = diff > 0 ? 1 : -1;
-        if (newFacing == FacingDirection)
-            return;
-
-        FacingDirection = newFacing;
-        FlipVisuals();
-    }
-
     public void ApplyKnockBack(float x, float y) {
         movement.ApplyKnockback(x, y);
     }
@@ -535,25 +519,50 @@ public class PlayerState : MonoBehaviour
         movement.ResetVelocity();
     }
 
-    private void FlipVisuals() {
-        graphics.localScale = new Vector3(
-            Mathf.Abs(graphics.localScale.x) * FacingDirection,
-            graphics.localScale.y,
-            graphics.localScale.z
-        );
+    void HandleFacing() {
+        if (!movement.isGrounded)
+            return;
 
-        visor.localScale = new Vector3(
-            Mathf.Abs(visor.localScale.x) * FacingDirection,
-            visor.localScale.y,
-            visor.localScale.z
-        );
+        if (isAttacking) 
+            return;
 
-        attackSpawnPoint.localPosition = new Vector3(
-            Mathf.Abs(attackSpawnPoint.localPosition.x) * FacingDirection,
-            attackSpawnPoint.localPosition.y,
-            attackSpawnPoint.localPosition.z
-        );
+        if (opponent == null)
+            return;
+
+        float dirToOpponent = opponent.position.x - transform.position.x;
+
+        if (Mathf.Abs(dirToOpponent) < 0.01f)
+            return;
+
+        int desiredFacing = dirToOpponent > 0f ? 1 : -1;
+
+        if (desiredFacing != FacingDirection)
+            Flip(desiredFacing);
     }
+
+    void Flip(int newFacing) {
+        FacingDirection = newFacing;
+        float yRot = (FacingDirection == 1) ? -90f : 90f; 
+        Vector3 rot = transform.eulerAngles;
+        rot.y = yRot;
+        transform.eulerAngles = rot;
+
+        if (graphics != null)
+        {
+            Vector3 gScale = graphics.localScale;
+            gScale.x = Mathf.Abs(gScale.x);
+            graphics.localScale = gScale;
+        }
+
+        if (visor != null)
+        {
+            Vector3 vScale = visor.localScale;
+            vScale.x = Mathf.Abs(vScale.x);
+            visor.localScale = vScale;
+        }
+    }
+
+
 
     /*
     private void flipPlayer() {

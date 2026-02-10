@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement")]
     [SerializeField] float speed = 5f;
     [SerializeField] float jumpForce = 5f;
-    [SerializeField] float gravity = -11f;
+    [SerializeField] float gravity = -100f;
 
     [Header("Ground Check")]
     [SerializeField] Transform groundCheck;
