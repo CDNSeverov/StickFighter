@@ -43,8 +43,8 @@ public class PlayerState : MonoBehaviour
     int comboStep; 
 
     [Header("Hitstun")]
-    [SerializeField] float hitstunDuration = 0.25f;
-    [SerializeField] float blockstunDuration = 0.18f;
+    float hitstunDuration = 0.9f;
+    float blockstunDuration = 0.67f;
 
     float hitstunTimer;
 
@@ -53,6 +53,9 @@ public class PlayerState : MonoBehaviour
     int hashAttackAir;
     int hashHit;
     int hashBlockHit;
+    int hashIsBlocking;
+
+    public bool isBlocking;
 
     [Header("Knockdown")]
     [SerializeField] float knockdownDuration = 0.6f;
@@ -98,6 +101,7 @@ public class PlayerState : MonoBehaviour
         hashHit = Animator.StringToHash("Hit");
         hashKnockDown = Animator.StringToHash("KnockDown");
         hashBlockHit = Animator.StringToHash("BlockHit");
+        hashIsBlocking = Animator.StringToHash("IsBlocking");
     }
 
     void Start() {
@@ -151,6 +155,7 @@ public class PlayerState : MonoBehaviour
         animator.SetFloat(hashSpeed, Mathf.Abs(input.Horizontal)); 
         animator.SetBool(hashIsGrounded, movement.isGrounded); 
         animator.SetBool(hashIsHoldingBack, currentState == State.HoldingBack);
+        animator.SetBool(hashIsBlocking, isBlocking);
 
         if (currentState == State.Hitstun || currentState == State.BlockStun)
             return;
@@ -397,6 +402,8 @@ public class PlayerState : MonoBehaviour
     }
 
     void TakeNormalHit(Vector3 hitDir) {
+        isBlocking = false;
+
         SetState(State.Hitstun);
 
         hitstunTimer = hitstunDuration;
@@ -410,6 +417,8 @@ public class PlayerState : MonoBehaviour
 
 
     void TakeBlockHit(Vector3 hitDir) {
+        isBlocking = true;
+
         SetState(State.BlockStun);
 
         hitstunTimer = blockstunDuration;
@@ -428,6 +437,7 @@ public class PlayerState : MonoBehaviour
 
     void ExitBlockstun() {
         hitstunTimer = 0f;
+        isBlocking = false;
         SetState(State.Idle);
     }
 

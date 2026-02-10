@@ -22,7 +22,7 @@ public class Brawler : Character
     public override void OnAttack2() {
         Debug.Log("Brawler Attack 2");
         state.PushForward(7f);
-        state.SpawnHitboxDelayed(attack2Hitbox, 0.3f, 0.16f);
+        state.SpawnHitbox(attack2Hitbox, 0.16f);
     }
 
     public override void OnAttack3() {
