@@ -388,7 +388,7 @@ public class PlayerState : MonoBehaviour
     }
 
     public void TakeHit(Vector3 hitDirection) {
-        if (currentState == State.Hitstun || currentState == State.BlockStun)
+        if (currentState == State.BlockStun)
             return;
 
         CancelAttack();

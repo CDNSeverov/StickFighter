@@ -8,19 +8,32 @@ public class Projectile : MonoBehaviour
     int direction;
     Character owner;
 
-    public void Init(int facingDirection, Character ownerCharacter)
+    Vector3 moveDirection = Vector3.right; 
+
+    public void Init(int facingDirection, Character ownerCharacter, bool diagonal = false)
     {
         direction = facingDirection;
         owner = ownerCharacter;
+
+        if (diagonal)
+        {
+            moveDirection = new Vector3(direction, -1f, 0f).normalized;
+        }
+        else
+        {
+            moveDirection = new Vector3(direction, 0f, 0f);
+        }
+
         Destroy(gameObject, lifetime);
     }
 
     void Update()
     {
-        transform.Translate(Vector3.right * direction * speed * Time.deltaTime);
+        transform.Translate(moveDirection * speed * Time.deltaTime);
     }
 
-    void OnTriggerEnter(Collider other) {
+    void OnTriggerEnter(Collider other)
+    {
         PlayerState target = other.GetComponent<PlayerState>();
         if (target == null) return;
 
@@ -33,5 +46,4 @@ public class Projectile : MonoBehaviour
         target.TakeProjectileHit();
         Destroy(gameObject);
     }
-
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;   
 
-public class Brawler : Character
+public class Swordsman : Character
 {
     [Header("Hitboxes")] 
     [SerializeField] GameObject attack1Hitbox;
@@ -14,44 +14,44 @@ public class Brawler : Character
     [SerializeField] GameObject aSpecialHitbox;
     
     public override void OnAttack1() {
-        Debug.Log("Brawler Attack 1");
+        Debug.Log("Swordsman Attack 1");
         state.PushForward(7f);
-        state.SpawnHitbox(attack1Hitbox, 0.12f);
+        state.SpawnHitboxDelayed(attack1Hitbox, 0.3f, 0.12f);
     }
 
     public override void OnAttack2() {
-        Debug.Log("Brawler Attack 2");
+        Debug.Log("Swordsman Attack 2");
         state.PushForward(7f);
-        state.SpawnHitbox(attack2Hitbox, 0.16f);
+        state.SpawnHitboxDelayed(attack2Hitbox, 0.2f, 0.16f);
     }
 
     public override void OnAttack3() {
-        Debug.Log("Brawler Attack 3");
+        Debug.Log("Swordsman Attack 3");
         state.PushForward(7f);
         state.SpawnHitboxDelayed(attack3Hitbox, 0.3f, 0.18f);
     }
 
     public override void OnAttackAir() {
-        Debug.Log("Brawler Attack Air");
-        state.SpawnHitboxDelayed(attackAirHitbox, 0.3f, 0.18f);
+        Debug.Log("Swordsman Attack Air");
+        state.SpawnHitboxDelayed(attackAirHitbox, 0.2f, 0.18f);
     }
 
     public override void NeutralSpecial() {
-        Debug.Log("Brawler Neutral Special");
+        Debug.Log("Swordsman Neutral Special");
 
         StartCoroutine(NeutralSpecialRoutine());
     }
 
     private IEnumerator NeutralSpecialRoutine() {
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(0.3f);
 
         GameObject fireball = Instantiate(fireballPrefab, state.transform.position + Vector3.right * state.FacingDirection * 1.2f, Quaternion.identity);
 
-        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this);
+        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this, false);
     }
 
     public override void ForwardSpecial() {
-        Debug.Log("Brawler Forward Special");
+        Debug.Log("Swordsman Forward Special");
 
         state.PushForward(4f);
         state.SpawnHitboxDelayed(fSpecialHitbox, 0.2f, 0.5f); 
@@ -64,20 +64,27 @@ public class Brawler : Character
     }
 
     public override void BackSpecial() {
-        Debug.Log("Brawler Back Special");
+        Debug.Log("Swordsman Back Special");
 
         state.PushForward(17f);
-        state.SpawnHitboxDelayed(bSpecialHitbox, 0.2f, 0.3f);
+        state.SpawnHitboxDelayed(bSpecialHitbox, 0.4f, 0.2f);
     }
 
 
-    public override void AirSpecial() {
-        Debug.Log("Brawler Air Special");
+    public override void AirSpecial() { 
+        Debug.Log("Swordsman Air Special");
 
         state.ResetVelocity();
+        
+        StartCoroutine(AirSpecialRoutine());
+    }
 
-        state.SpawnHitboxDelayed(aSpecialHitbox, 0.4f, 0.4f);
-        state.ApplyKnockBack(13f * state.FacingDirection, -6f);
+    private IEnumerator AirSpecialRoutine() {
+        yield return new WaitForSeconds(0.3f);
+
+        GameObject fireball = Instantiate(fireballPrefab, state.transform.position + Vector3.right * state.FacingDirection * 1.2f, Quaternion.identity);
+
+        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this, true);
     }
 
 }
