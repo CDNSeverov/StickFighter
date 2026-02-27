@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;   
 
-public class Swordsman : Character
+public class Gunslinger : Character
 {
     [Header("Hitboxes")] 
     [SerializeField] GameObject attack1Hitbox;
@@ -14,44 +14,44 @@ public class Swordsman : Character
     [SerializeField] GameObject aSpecialHitbox;
     
     public override void OnAttack1() {
-        Debug.Log("Swordsman Attack 1");
+        Debug.Log("Gunslinger Attack 1");
         state.PushForward(7f);
         state.SpawnHitboxDelayed(attack1Hitbox, 0.3f, 0.12f);
     }
 
     public override void OnAttack2() {
-        Debug.Log("Swordsman Attack 2");
+        Debug.Log("Gunslinger Attack 2");
         state.PushForward(7f);
         state.SpawnHitboxDelayed(attack2Hitbox, 0.2f, 0.16f);
     }
 
     public override void OnAttack3() {
-        Debug.Log("Swordsman Attack 3");
+        Debug.Log("Gunslinger Attack 3");
         state.PushForward(7f);
         state.SpawnHitboxDelayed(attack3Hitbox, 0.3f, 0.18f);
     }
 
     public override void OnAttackAir() {
-        Debug.Log("Swordsman Attack Air");
+        Debug.Log("Gunslinger Attack Air");
         state.SpawnHitboxDelayed(attackAirHitbox, 0.2f, 0.18f);
     }
 
     public override void NeutralSpecial() {
-        Debug.Log("Swordsman Neutral Special");
+        Debug.Log("Gunslinger Neutral Special");
 
         StartCoroutine(NeutralSpecialRoutine());
     }
 
     private IEnumerator NeutralSpecialRoutine() {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.2f);
 
         GameObject fireball = Instantiate(fireballPrefab, state.transform.position + Vector3.right * state.FacingDirection * 1.2f, Quaternion.identity);
 
-        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this, 1);
+        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this, 0);
     }
 
     public override void ForwardSpecial() {
-        Debug.Log("Swordsman Forward Special");
+        Debug.Log("Gunslinger Forward Special");
 
         state.PushForward(4f);
         state.SpawnHitboxDelayed(fSpecialHitbox, 0.2f, 0.5f); 
@@ -64,17 +64,26 @@ public class Swordsman : Character
     }
 
     public override void BackSpecial() {
-        Debug.Log("Swordsman Back Special");
+        Debug.Log("Gunslinger Back Special");
+        
+        state.PushForward(12f);
+        StartCoroutine(BackSpecialRoutine());
 
-        state.PushForward(17f);
-        state.SpawnHitboxDelayed(bSpecialHitbox, 0.4f, 0.2f);
     }
 
+    private IEnumerator BackSpecialRoutine() {
+        yield return new WaitForSeconds(0.3f);
+
+        GameObject fireball = Instantiate(fireballPrefab, state.transform.position + Vector3.right * state.FacingDirection * 1.2f, Quaternion.identity);
+
+        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this, -1);
+    }
 
     public override void AirSpecial() { 
-        Debug.Log("Swordsman Air Special");
+        Debug.Log("Gunslinger Air Special");
 
         state.ResetVelocity();
+        state.PushForward(-4f);
         
         StartCoroutine(AirSpecialRoutine());
     }
@@ -83,8 +92,10 @@ public class Swordsman : Character
         yield return new WaitForSeconds(0.3f);
 
         GameObject fireball = Instantiate(fireballPrefab, state.transform.position + Vector3.right * state.FacingDirection * 1.2f, Quaternion.identity);
+        
+        state.ApplyKnockBack(-5f * state.FacingDirection, 10f);
 
-        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this, 0);
+        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this, 1);
     }
 
 }

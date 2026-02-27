@@ -10,14 +10,17 @@ public class Projectile : MonoBehaviour
 
     Vector3 moveDirection = Vector3.right; 
 
-    public void Init(int facingDirection, Character ownerCharacter, bool diagonal = false)
+    public void Init(int facingDirection, Character ownerCharacter, int diagonal = 0)
     {
         direction = facingDirection;
         owner = ownerCharacter;
 
-        if (diagonal)
+        if (diagonal == 1)
         {
             moveDirection = new Vector3(direction, -1f, 0f).normalized;
+        }
+        else if (diagonal == -1) {
+            moveDirection = new Vector3(direction, 1f, 0f).normalized;
         }
         else
         {

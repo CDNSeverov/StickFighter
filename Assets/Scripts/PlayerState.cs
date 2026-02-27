@@ -30,7 +30,8 @@ public class PlayerState : MonoBehaviour
     [Header("Facing")]
     [SerializeField] Transform graphics;
     [SerializeField] Transform visor;
-    [SerializeField] Transform opponent;
+    GameObject player1;
+    GameObject player2;
 
     [Header("Combo")]
     [SerializeField] float comboBufferTime = 0.4f;
@@ -106,12 +107,17 @@ public class PlayerState : MonoBehaviour
 
     void Start() {
         FacingDirection = transform.localScale.x >= 0 ? 1 : -1;
+
+        player1 = GameObject.FindWithTag("Player1");
+        player2 = GameObject.FindWithTag("Player2");
     }
 
     void Update() {
 
         //Debug.Log(currentState);
-        HandleFacing();
+        //Debug.Log(opponent.position);
+
+        flipPlayer();
 
         if (comboBuffered)
         {
@@ -528,66 +534,26 @@ public class PlayerState : MonoBehaviour
     public void ResetVelocity() {
         movement.ResetVelocity();
     }
-
-    void HandleFacing() {
-        if (!movement.isGrounded)
-            return;
-
-        if (isAttacking) 
-            return;
-
-        if (opponent == null)
-            return;
-
-        float dirToOpponent = opponent.position.x - transform.position.x;
-
-        if (Mathf.Abs(dirToOpponent) < 0.01f)
-            return;
-
-        int desiredFacing = dirToOpponent > 0f ? 1 : -1;
-
-        if (desiredFacing != FacingDirection)
-            Flip(desiredFacing);
-    }
-
-    void Flip(int newFacing) {
-        FacingDirection = newFacing;
-        float yRot = (FacingDirection == 1) ? -90f : 90f; 
-        Vector3 rot = transform.eulerAngles;
-        rot.y = yRot;
-        transform.eulerAngles = rot;
-
-        if (graphics != null)
-        {
-            Vector3 gScale = graphics.localScale;
-            gScale.x = Mathf.Abs(gScale.x);
-            graphics.localScale = gScale;
-        }
-
-        if (visor != null)
-        {
-            Vector3 vScale = visor.localScale;
-            vScale.x = Mathf.Abs(vScale.x);
-            visor.localScale = vScale;
-        }
-    }
-
-
-
-    /*
+    
     private void flipPlayer() {
+        if (!movement.isGrounded) return;
+        
         Vector3 p1 = player1.transform.position;
         Vector3 p2 = player2.transform.position;
 
         float distanceN = p1.x - p2.x;
         //Debug.Log(distanceN);
 
-        if ((distanceN < 0 && playerSide) || (distanceN > 0 && !playerSide)) {
+        if ((distanceN < 0 && FacingDirection == -1) || (distanceN > 0 && FacingDirection == 1)) {
             Vector3 rot = transform.eulerAngles;
             rot.y += 180f;    
             transform.eulerAngles = rot;
-            playerSide = !playerSide;
+            if (FacingDirection == 1) {
+                FacingDirection = -1;
+            } else if (FacingDirection == -1) {
+                FacingDirection = 1;
+            }
         }
     }
-    */
+    
 }
