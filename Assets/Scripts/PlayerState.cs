@@ -44,8 +44,8 @@ public class PlayerState : MonoBehaviour
     int comboStep; 
 
     [Header("Hitstun")]
-    float hitstunDuration = 0.9f;
-    float blockstunDuration = 0.67f;
+    float hitstunDuration = 1f;
+    float blockstunDuration = 1f;
 
     float hitstunTimer;
 
@@ -68,10 +68,10 @@ public class PlayerState : MonoBehaviour
 
     public bool IsUnhittable => currentState == State.KnockedDown || currentState == State.Recovery;
 
-
     // Back = -FacingDirection
     // Forward = +FacingDirection
     public int FacingDirection { get; private set; }
+    GameObject opponent;
     public State currentState { get; private set; } = State.Idle;
 
     PlayerInput input;
@@ -80,11 +80,14 @@ public class PlayerState : MonoBehaviour
     Character character;
     Animator animator;
 
-    GameObject activeHitbox; // draw this
+    GameObject activeHitbox; 
 
     int hashSpeed; 
     int hashIsGrounded; 
     int hashIsHoldingBack;
+
+    [Header("Health")]
+    HealthManagerScript hmanager;
 
     void Awake() {
         input = GetComponent<PlayerInput>();
@@ -92,6 +95,7 @@ public class PlayerState : MonoBehaviour
         blocking = GetComponent<PlayerBlocking>();
         character = GetComponent<Character>();
         animator = GetComponentInChildren<Animator>();
+        hmanager = GetComponent<HealthManagerScript>();
         
         hashSpeed = Animator.StringToHash("Speed"); 
         hashIsGrounded = Animator.StringToHash("IsGrounded"); 
@@ -106,16 +110,24 @@ public class PlayerState : MonoBehaviour
     }
 
     void Start() {
-        FacingDirection = transform.localScale.x >= 0 ? 1 : -1;
+        FacingDirection = transform.position.x >= 0 ? -1 : 1;
 
         player1 = GameObject.FindWithTag("Player1");
         player2 = GameObject.FindWithTag("Player2");
+
+        if (gameObject == player1) {
+            opponent = player2;
+        } else if (gameObject == player2) {
+            opponent = player1;
+        }
     }
 
     void Update() {
 
         //Debug.Log(currentState);
         //Debug.Log(opponent.position);
+        //Debug.Log(health);
+        //Debug.Log(this + " " + FacingDirection);
 
         flipPlayer();
 
@@ -394,12 +406,9 @@ public class PlayerState : MonoBehaviour
     }
 
     public void TakeHit(Vector3 hitDirection) {
-        if (currentState == State.BlockStun)
-            return;
-
         CancelAttack();
 
-        if (currentState == State.HoldingBack) {
+        if (currentState == State.HoldingBack || currentState == State.BlockStun) {
             TakeBlockHit(hitDirection);
             return;
         }
@@ -419,8 +428,9 @@ public class PlayerState : MonoBehaviour
 
         animator.ResetTrigger(hashHit);
         animator.SetTrigger(hashHit);
-    }
 
+        hmanager.TakeDamage(10f);
+    }
 
     void TakeBlockHit(Vector3 hitDir) {
         isBlocking = true;
@@ -434,6 +444,58 @@ public class PlayerState : MonoBehaviour
 
         animator.ResetTrigger(hashBlockHit);
         animator.SetTrigger(hashBlockHit);
+
+        hmanager.TakeDamage(1f);
+    }
+
+    public void TakeSpecialHit(Vector3 hitDir) {
+        if (currentState == State.KnockedDown || currentState == State.Recovery) {
+            return;
+        }
+
+        CancelAttack();
+
+        if (currentState == State.HoldingBack || currentState == State.BlockStun) {
+            TakeBlockHit(hitDir);
+            return;
+        }
+
+        SetState(State.KnockedDown);
+
+        knockdownTimer = knockdownDuration;
+
+        movement.ResetVelocity();
+        movement.ApplyKnockback(hitDir.x * knockbackForce, 0f);
+
+        animator.ResetTrigger(hashKnockDown);
+        animator.SetTrigger(hashKnockDown);
+
+        hmanager.TakeDamage(20f);
+    }
+
+    public void TakeProjectileHit() {
+        if (currentState == State.Hitstun || currentState == State.BlockStun) {
+            return;
+        }
+
+        CancelAttack();
+
+        if (currentState == State.HoldingBack || currentState == State.BlockStun) {
+            Vector3 hitDir = new Vector3(0f, 0f, 0f);
+            TakeBlockHit(hitDir);
+            return;
+        }
+
+        SetState(State.Hitstun);
+        hitstunTimer = hitstunDuration;
+
+        movement.ResetVelocity();
+        movement.ApplyKnockback(-FacingDirection * knockbackForce * 0.5f, 0f);
+
+        animator.ResetTrigger(hashHit);
+        animator.SetTrigger(hashHit);
+
+        hmanager.TakeDamage(10f);
     }
 
     void ExitHitstun() {
@@ -453,24 +515,6 @@ public class PlayerState : MonoBehaviour
             Destroy(activeHitbox);
     }
 
-    public void TakeSpecialHit(Vector3 hitDir) {
-        if (currentState == State.KnockedDown || currentState == State.Recovery)
-            return;
-
-        CancelAttack();
-
-        SetState(State.KnockedDown);
-
-        knockdownTimer = knockdownDuration;
-
-        movement.ResetVelocity();
-        movement.ApplyKnockback(hitDir.x * knockbackForce, 0f);
-
-        animator.ResetTrigger(hashKnockDown);
-        animator.SetTrigger(hashKnockDown);
-    }
-
-
     void EnterRecovery() {
         SetState(State.Recovery);
         recoveryTimer = recoveryDuration;
@@ -482,23 +526,6 @@ public class PlayerState : MonoBehaviour
         recoveryTimer = 0f;
         SetState(State.Idle);
     }
-
-    public void TakeProjectileHit() {
-        if (currentState == State.Hitstun || currentState == State.BlockStun)
-            return;
-
-        CancelAttack();
-
-        SetState(State.Hitstun);
-        hitstunTimer = hitstunDuration;
-
-        movement.ResetVelocity();
-        movement.ApplyKnockback(-FacingDirection * knockbackForce * 0.5f, 0f);
-
-        animator.ResetTrigger(hashHit);
-        animator.SetTrigger(hashHit);
-    }
-
 
     public void SpawnHitbox(GameObject prefab, float duration) {
         if (activeHitbox != null) {
@@ -538,22 +565,20 @@ public class PlayerState : MonoBehaviour
     private void flipPlayer() {
         if (!movement.isGrounded) return;
         
-        Vector3 p1 = player1.transform.position;
-        Vector3 p2 = player2.transform.position;
+        float myX = transform.position.x;
+        float opponentX = opponent.transform.position.x;
 
-        float distanceN = p1.x - p2.x;
-        //Debug.Log(distanceN);
-
-        if ((distanceN < 0 && FacingDirection == -1) || (distanceN > 0 && FacingDirection == 1)) {
-            Vector3 rot = transform.eulerAngles;
-            rot.y += 180f;    
-            transform.eulerAngles = rot;
-            if (FacingDirection == 1) {
-                FacingDirection = -1;
-            } else if (FacingDirection == -1) {
-                FacingDirection = 1;
-            }
+        if (opponentX > myX && FacingDirection == -1) {
+            flip();
+        } else if (opponentX < myX && FacingDirection == 1) {
+            flip();
         }
     }
     
+    private void flip() {
+        Vector3 rot = transform.eulerAngles;
+        rot.y += 180f;    
+        transform.eulerAngles = rot;
+        FacingDirection = -FacingDirection;
+    }
 }

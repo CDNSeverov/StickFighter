@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\AnimationEventForwarder.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Projectile.cs" />
+    <Compile Include="Assets\Scripts\HealthManagerScript.cs" />
     <Compile Include="Assets\Scripts\PlayerState.cs" />
     <Compile Include="Assets\Scripts\PlayerBlocking.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />

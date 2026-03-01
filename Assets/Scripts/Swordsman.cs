@@ -12,7 +12,7 @@ public class Swordsman : Character
     [SerializeField] GameObject fSpecialHitbox;
     [SerializeField] GameObject bSpecialHitbox;
     [SerializeField] GameObject aSpecialHitbox;
-    
+
     public override void OnAttack1() {
         Debug.Log("Swordsman Attack 1");
         state.PushForward(7f);
