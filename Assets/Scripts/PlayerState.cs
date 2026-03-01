@@ -18,7 +18,9 @@ public class PlayerState : MonoBehaviour
         Recovery,
         HoldingBack,
         BlockStun,
-        ComboWindow
+        ComboWindow,
+        Defeated,
+        Won
     }
 
     [Header("Combat")]
@@ -85,6 +87,7 @@ public class PlayerState : MonoBehaviour
     int hashSpeed; 
     int hashIsGrounded; 
     int hashIsHoldingBack;
+    int hashDefeated;
 
     [Header("Health")]
     HealthManagerScript hmanager;
@@ -107,6 +110,7 @@ public class PlayerState : MonoBehaviour
         hashKnockDown = Animator.StringToHash("KnockDown");
         hashBlockHit = Animator.StringToHash("BlockHit");
         hashIsBlocking = Animator.StringToHash("IsBlocking");
+        hashDefeated = Animator.StringToHash("Defeated");
     }
 
     void Start() {
@@ -124,11 +128,16 @@ public class PlayerState : MonoBehaviour
 
     void Update() {
 
-        //Debug.Log(currentState);
+        Debug.Log(currentState);
         //Debug.Log(opponent.position);
         //Debug.Log(health);
         //Debug.Log(this + " " + FacingDirection);
 
+        
+        if (currentState == State.Defeated || currentState == State.Won) {
+            return;
+        }
+       
         flipPlayer();
 
         if (comboBuffered)
@@ -474,7 +483,7 @@ public class PlayerState : MonoBehaviour
     }
 
     public void TakeProjectileHit() {
-        if (currentState == State.Hitstun || currentState == State.BlockStun) {
+        if (currentState == State.BlockStun) {
             return;
         }
 
@@ -580,5 +589,27 @@ public class PlayerState : MonoBehaviour
         rot.y += 180f;    
         transform.eulerAngles = rot;
         FacingDirection = -FacingDirection;
+    }
+
+    public float GetHealthFromManager() {
+        return hmanager.GetHealth();
+    }
+
+    public void ResetHealthInManager() {
+        hmanager.ResetHealthBar();
+    }
+
+    public void Defeated() {
+        SetState(State.Defeated);
+        animator.ResetTrigger(hashDefeated);
+        animator.SetTrigger(hashDefeated);
+    }
+
+    public void Won() {
+        SetState(State.Won);
+    }
+
+    public void StartMatch() {
+        SetState(State.Idle);
     }
 }

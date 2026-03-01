@@ -15,4 +15,8 @@ public class HealthManagerScript : MonoBehaviour
         healthBar.fillAmount = 1;
         healthAmount = 100f;
     }
+
+    public float GetHealth() {
+        return healthAmount;
+    }
 }

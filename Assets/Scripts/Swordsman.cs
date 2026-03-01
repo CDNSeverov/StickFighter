@@ -47,7 +47,7 @@ public class Swordsman : Character
 
         GameObject fireball = Instantiate(fireballPrefab, state.transform.position + Vector3.right * state.FacingDirection * 1.2f, Quaternion.identity);
 
-        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this, 1);
+        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this, 0);
     }
 
     public override void ForwardSpecial() {
@@ -84,7 +84,7 @@ public class Swordsman : Character
 
         GameObject fireball = Instantiate(fireballPrefab, state.transform.position + Vector3.right * state.FacingDirection * 1.2f, Quaternion.identity);
 
-        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this, 0);
+        fireball.GetComponent<Projectile>().Init(state.FacingDirection, this, 1);
     }
 
 }
