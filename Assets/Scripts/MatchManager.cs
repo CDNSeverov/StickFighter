@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;   
 using UnityEngine.UI;
+using TMPro;
 
 public class MatchManager : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class MatchManager : MonoBehaviour
     [SerializeField] Image Round12;
     [SerializeField] Image Round21;
     [SerializeField] Image Round22;
+    [SerializeField] TextMeshProUGUI timerText;
+    [SerializeField] TextMeshProUGUI countdownTimer;
 
     GameObject player1;
     GameObject player2;
@@ -18,22 +21,43 @@ public class MatchManager : MonoBehaviour
     float player1RoundsWon;
     float player2RoundsWon;
 
+    float currentTime;
+    public float startingTime = 99f;
+
+    bool roundInProgress;
+
     void Start()
     {
         player1 = GameObject.FindWithTag("Player1");
         player2 = GameObject.FindWithTag("Player2");
         player1State = player1.GetComponent<PlayerState>();
         player2State = player2.GetComponent<PlayerState>();
+        currentTime = startingTime;
+        roundInProgress = true;
     }
 
     void Update()
     {
-        if (player1RoundsWon == 2 || player2RoundsWon == 2) {
-            
+        if (!roundInProgress) {
+            return;
         }
 
         player1Health = player1State.GetHealthFromManager();
         player2Health = player2State.GetHealthFromManager();
+        currentTime -= 1 * Time.deltaTime;
+        timerText.text = currentTime.ToString("0");
+
+        if (currentTime <= 0) {
+            if (player1Health > player2Health) {
+                EndRound(1);
+            } else {
+                EndRound(2);
+            }
+        }
+
+        if (player1RoundsWon == 2 || player2RoundsWon == 2) {
+            EndGame();
+        }
 
         if (player1Health <= 0f) {
             player1State.ResetHealthInManager();
@@ -47,6 +71,8 @@ public class MatchManager : MonoBehaviour
     }
 
     private void EndRound(int player) {
+        roundInProgress = false;
+
         if (player == 1) {
             player2State.Defeated();
             player1State.Won();
@@ -93,8 +119,28 @@ public class MatchManager : MonoBehaviour
     }
 
     private IEnumerator RoundStartTimer() {
-        yield return new WaitForSeconds(3f);
+        countdownTimer.text = "3";
+        yield return new WaitForSeconds(1f);
+        countdownTimer.text = "2";
+        yield return new WaitForSeconds(1f);
+        countdownTimer.text = "1";
+        yield return new WaitForSeconds(1f);
+        countdownTimer.text = "FIGHT!";
+        yield return new WaitForSeconds(0.2f);
+        countdownTimer.text = "";
+
+        roundInProgress = true;
+
         player1State.StartMatch();
         player2State.StartMatch();
+
+        player1State.ResetPosition(1);
+        player2State.ResetPosition(2);
+        
+        currentTime = startingTime;
+    }
+
+    private void EndGame() {
+
     }
 }

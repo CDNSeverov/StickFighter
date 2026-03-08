@@ -274,9 +274,7 @@ public class PlayerState : MonoBehaviour
         return !isAttacking && currentState == State.Idle;
     }
 
-
-    void StartAttack(int step)
-    {
+    void StartAttack(int step) {
         if (isAttacking) {
             return;
         }
@@ -352,8 +350,7 @@ public class PlayerState : MonoBehaviour
         character.AirSpecial();
     }
 
-    void HandleComboWindow()
-    {
+    void HandleComboWindow() {
         if (currentState != State.ComboWindow)
             return;
 
@@ -390,8 +387,7 @@ public class PlayerState : MonoBehaviour
             SetState(State.Idle);
     }
 
-    void EndCombo()
-    {
+    void EndCombo() {
         isAttacking = false;
         comboBuffered = false;
         comboStep = 0;
@@ -401,8 +397,7 @@ public class PlayerState : MonoBehaviour
         animator.SetInteger(hashAttackIndex, 0);
     }
 
-    void CancelAttack()
-    {
+    void CancelAttack() {
         isAttacking = false;
         comboBuffered = false;
         comboStep = 0;
@@ -611,5 +606,13 @@ public class PlayerState : MonoBehaviour
 
     public void StartMatch() {
         SetState(State.Idle);
+    }
+
+    public void ResetPosition(int playerNumber) {
+        if (playerNumber == 1) {
+            transform.position = new Vector3(-3f, 0.9f, -2.5f);
+        } else if (playerNumber == 2) {
+            transform.position = new Vector3(3f, 0.9f, -2.5f);
+        }
     }
 }
