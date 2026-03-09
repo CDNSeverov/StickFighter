@@ -48,7 +48,7 @@ public class PlayerState : MonoBehaviour
 
     [Header("Hitstun")]
     float hitstunDuration = 1f;
-    float blockstunDuration = 1f;
+    float blockstunDuration = 0.8f;
 
     float hitstunTimer;
 
@@ -185,8 +185,9 @@ public class PlayerState : MonoBehaviour
         animator.SetBool(hashIsHoldingBack, currentState == State.HoldingBack);
         animator.SetBool(hashIsBlocking, isBlocking);
 
-        if (currentState == State.Hitstun || currentState == State.BlockStun)
+        if (currentState == State.Hitstun || currentState == State.BlockStun) {
             return;
+        }
 
         if (!isAttacking) {
             HandleMovement();
@@ -221,6 +222,10 @@ public class PlayerState : MonoBehaviour
     }
 
     private void HandleAttackInput() {
+        if (currentState == State.Defeated || currentState == State.Won || currentState == State.Starting) {
+            return;
+        }
+
         if (!movement.isGrounded && !isAttacking)
         {
             StartAirAttack();
@@ -266,13 +271,20 @@ public class PlayerState : MonoBehaviour
         StartNeutralSpecial();
     }
 
-    private bool CanSpecial() {
-        return (currentState == State.Idle || currentState == State.HoldingBack) && !isAttacking;
+    private bool CanAttack() {
+        return !isAttacking 
+            && currentState != State.Defeated 
+            && currentState != State.Won 
+            && currentState != State.Starting
+            && currentState == State.Idle;
     }
 
-
-    private bool CanAttack() {
-        return !isAttacking && currentState == State.Idle;
+    private bool CanSpecial() {
+        return (currentState == State.Idle || currentState == State.HoldingBack) 
+            && !isAttacking
+            && currentState != State.Defeated 
+            && currentState != State.Won 
+            && currentState != State.Starting;
     }
 
     void StartAttack(int step) {
@@ -352,8 +364,13 @@ public class PlayerState : MonoBehaviour
     }
 
     void HandleComboWindow() {
-        if (currentState != State.ComboWindow)
+        if (currentState != State.ComboWindow) {
             return;
+        }
+
+        if (currentState == State.Defeated || currentState == State.Won || currentState == State.Starting) {
+            return;
+        }
 
         comboWindowTimer -= Time.deltaTime;
 
@@ -596,16 +613,19 @@ public class PlayerState : MonoBehaviour
     }
 
     public void Defeated() {
+        CancelAttack();
         SetState(State.Defeated);
         animator.ResetTrigger(hashDefeated);
         animator.SetTrigger(hashDefeated);
     }
 
     public void Won() {
+        CancelAttack();
         SetState(State.Won);
     }
 
     public void StartingMatch() {
+        CancelAttack();
         SetState(State.Starting);
     }
 
