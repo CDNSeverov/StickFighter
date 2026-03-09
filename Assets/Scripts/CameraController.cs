@@ -43,7 +43,7 @@ public class CameraController : MonoBehaviour
 
         float distance = Mathf.Abs(p1.x - p2.x);
 
-        Vector3 targetPosition = new Vector3(middleX, 3f, -11f);
+        Vector3 targetPosition = new Vector3(middleX, 2.7f, -8.3f);
         camera.transform.position = targetPosition;
 
         UpdateWalls();

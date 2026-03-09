@@ -26,7 +26,7 @@ public class PlayerState : MonoBehaviour
 
     [Header("Combat")]
     [SerializeField] float knockbackForce = 6f;
-    [SerializeField] float launchForce = 10f;
+    [SerializeField] float launchForce = 7f;
     [SerializeField] GameObject attackHitboxPrefab;
     [SerializeField] Transform attackSpawnPoint;
 
@@ -89,6 +89,7 @@ public class PlayerState : MonoBehaviour
     int hashIsGrounded; 
     int hashIsHoldingBack;
     int hashDefeated;
+    int hashWon;
 
     [Header("Health")]
     HealthManagerScript hmanager;
@@ -112,6 +113,7 @@ public class PlayerState : MonoBehaviour
         hashBlockHit = Animator.StringToHash("BlockHit");
         hashIsBlocking = Animator.StringToHash("IsBlocking");
         hashDefeated = Animator.StringToHash("Defeated");
+        hashWon = Animator.StringToHash("Won");
     }
 
     void Start() {
@@ -198,6 +200,9 @@ public class PlayerState : MonoBehaviour
     }
 
     private void HandleInputs() {
+        if (currentState == State.Defeated || currentState == State.Won || currentState == State.Starting) {
+            return;
+        }
 
         if (input.AttackPressed)
             HandleAttackInput();
@@ -428,6 +433,10 @@ public class PlayerState : MonoBehaviour
     }
 
     public void TakeHit(Vector3 hitDirection) {
+        if (currentState == State.Defeated || currentState == State.Won || currentState == State.Starting) {
+            return;
+        }
+
         CancelAttack();
 
         if (currentState == State.HoldingBack || currentState == State.BlockStun) {
@@ -439,6 +448,10 @@ public class PlayerState : MonoBehaviour
     }
 
     void TakeNormalHit(Vector3 hitDir) {
+        if (currentState == State.Defeated || currentState == State.Won || currentState == State.Starting) {
+            return;
+        }
+
         isBlocking = false;
 
         SetState(State.Hitstun);
@@ -455,6 +468,10 @@ public class PlayerState : MonoBehaviour
     }
 
     void TakeBlockHit(Vector3 hitDir) {
+        if (currentState == State.Defeated || currentState == State.Won || currentState == State.Starting) {
+            return;
+        }
+
         isBlocking = true;
 
         SetState(State.BlockStun);
@@ -471,6 +488,10 @@ public class PlayerState : MonoBehaviour
     }
 
     public void TakeSpecialHit(Vector3 hitDir) {
+        if (currentState == State.Defeated || currentState == State.Won || currentState == State.Starting) {
+            return;
+        }
+
         if (currentState == State.KnockedDown || currentState == State.Recovery) {
             return;
         }
@@ -496,6 +517,10 @@ public class PlayerState : MonoBehaviour
     }
 
     public void TakeProjectileHit() {
+        if (currentState == State.Defeated || currentState == State.Won || currentState == State.Starting) {
+            return;
+        }
+
         if (currentState == State.BlockStun) {
             return;
         }
@@ -622,6 +647,8 @@ public class PlayerState : MonoBehaviour
     public void Won() {
         CancelAttack();
         SetState(State.Won);
+        animator.ResetTrigger(hashWon);
+        animator.SetTrigger(hashWon);
     }
 
     public void StartingMatch() {
