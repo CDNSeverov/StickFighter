@@ -20,7 +20,8 @@ public class PlayerState : MonoBehaviour
         BlockStun,
         ComboWindow,
         Defeated,
-        Won
+        Won,
+        Starting
     }
 
     [Header("Combat")]
@@ -134,7 +135,7 @@ public class PlayerState : MonoBehaviour
         //Debug.Log(this + " " + FacingDirection);
 
         
-        if (currentState == State.Defeated || currentState == State.Won) {
+        if (currentState == State.Defeated || currentState == State.Won || currentState == State.Starting) {
             return;
         }
        
@@ -604,15 +605,25 @@ public class PlayerState : MonoBehaviour
         SetState(State.Won);
     }
 
+    public void StartingMatch() {
+        SetState(State.Starting);
+    }
+
     public void StartMatch() {
         SetState(State.Idle);
     }
 
     public void ResetPosition(int playerNumber) {
+        Vector3 resetPositon;
+
         if (playerNumber == 1) {
-            transform.position = new Vector3(-3f, 0.9f, -2.5f);
+            resetPositon = new Vector3(-3f, 0.9f, -2.5f);
         } else if (playerNumber == 2) {
-            transform.position = new Vector3(3f, 0.9f, -2.5f);
+            resetPositon = new Vector3(3f, 0.9f, -2.5f);
+        } else {
+            resetPositon = new Vector3(-3f, 0.9f, -2.5f);
         }
+
+        movement.ResetPlayerPosition(resetPositon);
     }
 }

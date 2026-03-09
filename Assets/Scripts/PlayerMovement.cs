@@ -70,4 +70,16 @@ public class PlayerMovement : MonoBehaviour
         pos.z = 0f;
         transform.position = pos;
     }
+
+    public void ResetPlayerPosition(Vector3 newPosition) {
+        controller.enabled = false;
+
+        velocity = Vector3.zero;
+        externalXVelocity = 0f;
+        jumpXVelocity = 0f;
+
+        transform.position = newPosition;
+
+        controller.enabled = true;
+    }
 }
