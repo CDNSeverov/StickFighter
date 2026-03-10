@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;   
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class MatchManager : MonoBehaviour
 {
@@ -51,6 +52,11 @@ public class MatchManager : MonoBehaviour
         if (!roundInProgress || gameFinished) {
             return;
         }
+        
+        if (player1RoundsWon == 2 || player2RoundsWon == 2) {
+            EndGame();
+        }
+
 
         player1Health = player1State.GetHealthFromManager();
         player2Health = player2State.GetHealthFromManager();
@@ -63,10 +69,6 @@ public class MatchManager : MonoBehaviour
             } else {
                 EndRound(2);
             }
-        }
-
-        if (player1RoundsWon == 2 || player2RoundsWon == 2) {
-            EndGame();
         }
 
         if (player1Health <= 0f) {
@@ -121,12 +123,12 @@ public class MatchManager : MonoBehaviour
     }
 
     private IEnumerator RoundEndTimer() {
-        yield return new WaitForSeconds(4f);
-
         if (player1RoundsWon == 2 || player2RoundsWon == 2) {
             EndGame();
             yield break;
         }
+
+        yield return new WaitForSeconds(4f);
         
         ResetPlayers();
 
@@ -162,6 +164,23 @@ public class MatchManager : MonoBehaviour
 
     private void EndGame() {
         gameFinished = true;
-        countdownTimer.text = player1RoundsWon == 2 ? "PLAYER 1 WINS!" : "PLAYER 2 WINS!";
+
+        if (player1RoundsWon == 2) {
+            countdownTimer.text = "PLAYER 1 WINS!";
+            player2State.Defeated();
+            player1State.Won();
+            GameData.winner = 1;
+        } else if (player2RoundsWon == 2) {
+            countdownTimer.text = "PLAYER 2 WINS!";
+            player1State.Defeated();
+            player2State.Won();
+            GameData.winner = 2;
+        } 
+
+        ChangeScene("EndScreen");
+    }
+
+    public void ChangeScene(string sceneName) {
+        SceneManager.LoadScene(sceneName);
     }
 }

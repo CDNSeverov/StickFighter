@@ -4532,7 +4532,7 @@ MonoBehaviour:
   Round22: {fileID: 1565207372}
   timerText: {fileID: 573828280}
   countdownTimer: {fileID: 1541413439}
-  startingTime: 99
+  startingTime: 1
 --- !u!1001 &1780572022
 PrefabInstance:
   m_ObjectHideFlags: 0
