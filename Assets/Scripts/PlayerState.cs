@@ -26,7 +26,6 @@ public class PlayerState : MonoBehaviour
 
     [Header("Combat")]
     [SerializeField] float knockbackForce = 6f;
-    [SerializeField] float launchForce = 7f;
     [SerializeField] GameObject attackHitboxPrefab;
     [SerializeField] Transform attackSpawnPoint;
 
@@ -246,7 +245,7 @@ public class PlayerState : MonoBehaviour
         comboBuffered = true;
         comboBufferTimer = comboBufferTime;
 
-        if (currentState == State.Idle)
+        if (CanAttack())
         {
             StartAttack(1);
         }
@@ -287,7 +286,7 @@ public class PlayerState : MonoBehaviour
             && currentState != State.Defeated 
             && currentState != State.Won 
             && currentState != State.Starting
-            && currentState == State.Idle;
+            && (currentState == State.Idle || currentState == State.HoldingBack);
     }
 
     private bool CanSpecial() {
