@@ -11,7 +11,9 @@ public class MatchManager : MonoBehaviour
     [SerializeField] Image Round21;
     [SerializeField] Image Round22;
     [SerializeField] TextMeshProUGUI timerText;
+    [SerializeField] TextMeshProUGUI timerText2;
     [SerializeField] TextMeshProUGUI countdownTimer;
+    [SerializeField] TextMeshProUGUI countdownTimer2;
 
     GameObject player1;
     GameObject player2;
@@ -62,6 +64,7 @@ public class MatchManager : MonoBehaviour
         player2Health = player2State.GetHealthFromManager();
         currentTime -= 1 * Time.deltaTime;
         timerText.text = currentTime.ToString("0");
+        timerText2.text = currentTime.ToString("0");
 
         if (currentTime <= 0) {
             if (player1Health > player2Health) {
@@ -137,14 +140,19 @@ public class MatchManager : MonoBehaviour
 
     private IEnumerator RoundStartTimer() {
         countdownTimer.text = "3";
+        countdownTimer2.text = "3";
         yield return new WaitForSeconds(1f);
         countdownTimer.text = "2";
+        countdownTimer2.text = "2";
         yield return new WaitForSeconds(1f);
+        countdownTimer2.text = "1";
         countdownTimer.text = "1";
         yield return new WaitForSeconds(1f);
         countdownTimer.text = "FIGHT!";
+        countdownTimer2.text = "FIGHT!";
         yield return new WaitForSeconds(0.2f);
         countdownTimer.text = "";
+        countdownTimer2.text = "";
 
         roundInProgress = true;
 
@@ -166,12 +174,10 @@ public class MatchManager : MonoBehaviour
         gameFinished = true;
 
         if (player1RoundsWon == 2) {
-            countdownTimer.text = "PLAYER 1 WINS!";
             player2State.Defeated();
             player1State.Won();
             GameData.winner = 1;
         } else if (player2RoundsWon == 2) {
-            countdownTimer.text = "PLAYER 2 WINS!";
             player1State.Defeated();
             player2State.Won();
             GameData.winner = 2;

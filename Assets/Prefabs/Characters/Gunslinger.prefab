@@ -428,7 +428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthManagerScript
   healthBar: {fileID: 0}
-  healthAmount: 100
+  healthAmount: 250
 --- !u!1 &8714384453636776287
 GameObject:
   m_ObjectHideFlags: 0

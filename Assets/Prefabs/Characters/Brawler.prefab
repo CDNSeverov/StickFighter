@@ -459,7 +459,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthManagerScript
   healthBar: {fileID: 0}
-  healthAmount: 100
+  healthAmount: 300
 --- !u!1001 &6007928513901966607
 PrefabInstance:
   m_ObjectHideFlags: 0

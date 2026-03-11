@@ -91,6 +91,8 @@ public class PlayerState : MonoBehaviour
     int hashDefeated;
     int hashWon;
 
+    bool transitionState = false;
+
     [Header("Health")]
     HealthManagerScript hmanager;
 
@@ -131,10 +133,14 @@ public class PlayerState : MonoBehaviour
 
     void Update() {
 
-        Debug.Log(currentState);
+        //Debug.Log(currentState);
         //Debug.Log(opponent.position);
         //Debug.Log(health);
         //Debug.Log(this + " " + FacingDirection);
+
+        if (transitionState) {
+            return;
+        }
 
         
         if (currentState == State.Defeated || currentState == State.Won || currentState == State.Starting) {
@@ -642,6 +648,7 @@ public class PlayerState : MonoBehaviour
         SetState(State.Defeated);
         animator.ResetTrigger(hashDefeated);
         animator.SetTrigger(hashDefeated);
+        transitionState = true;
     }
 
     public void Won() {
@@ -649,6 +656,7 @@ public class PlayerState : MonoBehaviour
         SetState(State.Won);
         animator.ResetTrigger(hashWon);
         animator.SetTrigger(hashWon);
+        transitionState = true;
     }
 
     public void StartingMatch() {
@@ -658,6 +666,7 @@ public class PlayerState : MonoBehaviour
 
     public void StartMatch() {
         SetState(State.Idle);
+        transitionState = false;
     }
 
     public void ResetPosition(int playerNumber) {
