@@ -26,7 +26,7 @@ public class StageSelectManager : MonoBehaviour
             case 2: 
                 return "SeaStage";
             case 3: 
-                return "FieldStage";
+                return "NatureStage";
             default:
                 return "TestStage";
         }

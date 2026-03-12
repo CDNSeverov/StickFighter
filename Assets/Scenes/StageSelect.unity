@@ -634,7 +634,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: NAME OF STAGE
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8d216f19e11925143ade64d31daf53bf, type: 2}
   m_sharedMaterial: {fileID: 8219610390045420268, guid: 8d216f19e11925143ade64d31daf53bf, type: 2}
@@ -823,7 +823,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: FieldStage
+          m_StringArgument: NatureStage
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &970584317
