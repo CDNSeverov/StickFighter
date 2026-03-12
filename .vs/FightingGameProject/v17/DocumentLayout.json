@@ -7,6 +7,22 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\MatchManager.cs||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\AQUAS-Lite\\Readme.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\AQUAS-Lite\\Readme.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\CharacterSelectManager.cs||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\CharacterSelectManager.cs||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\StageSelectManager.cs||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\StageSelectManager.cs||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\GameData.cs||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\GameData.cs||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\PlayerState.cs||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\PlayerState.cs||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
@@ -31,10 +47,6 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\CameraController.cs||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\CharacterSelectManager.cs||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\CharacterSelectManager.cs||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\CharacterManager.cs||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\CharacterManager.cs||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
@@ -45,10 +57,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\HealthManagerScript.cs||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\HealthManagerScript.cs||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\GameData.cs||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\GameData.cs||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\EndScreenManager.cs||{3B902123-F8A7-4915-9F01-361F908088D0}",
@@ -90,24 +98,46 @@
       "DocumentGroups": [
         {
           "DockedWidth": 180,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "WinQuoteWriter.cs",
-              "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\WinQuoteWriter.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\WinQuoteWriter.cs",
-              "ToolTip": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\WinQuoteWriter.cs",
-              "RelativeToolTip": "Assets\\Scripts\\WinQuoteWriter.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-11T17:42:53.252Z",
-              "EditorCaption": ""
+              "DocumentIndex": 1,
+              "Title": "Readme.txt",
+              "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\AQUAS-Lite\\Readme.txt",
+              "RelativeDocumentMoniker": "Assets\\AQUAS-Lite\\Readme.txt",
+              "ToolTip": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\AQUAS-Lite\\Readme.txt",
+              "RelativeToolTip": "Assets\\AQUAS-Lite\\Readme.txt",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2026-03-12T11:54:30.582Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 3,
+              "Title": "StageSelectManager.cs",
+              "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\StageSelectManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\StageSelectManager.cs",
+              "ToolTip": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\StageSelectManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\StageSelectManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-12T11:25:27.146Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CharacterSelectManager.cs",
+              "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\CharacterSelectManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\CharacterSelectManager.cs",
+              "ToolTip": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\CharacterSelectManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\CharacterSelectManager.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAADgAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-11T12:41:23.417Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "CharacterManager.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\CharacterManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\CharacterManager.cs",
@@ -115,21 +145,7 @@
               "RelativeToolTip": "Assets\\Scripts\\CharacterManager.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEoAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-11T14:21:10.784Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "CharacterSelectManager.cs",
-              "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\CharacterSelectManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\CharacterSelectManager.cs",
-              "ToolTip": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\CharacterSelectManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\CharacterSelectManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADEAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-11T12:41:23.417Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-11T14:21:10.784Z"
             },
             {
               "$type": "Document",
@@ -139,14 +155,14 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\MatchManager.cs",
               "ToolTip": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\MatchManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\MatchManager.cs",
-              "ViewState": "AgIAAKUAAAAAAAAAAAAAALEAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAuwCQAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-01T20:05:18.176Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 10,
               "Title": "CameraController.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\CameraController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\CameraController.cs",
@@ -154,12 +170,35 @@
               "RelativeToolTip": "Assets\\Scripts\\CameraController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-08T13:56:22.196Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-08T13:56:22.196Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
+              "Title": "GameData.cs",
+              "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\GameData.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\GameData.cs",
+              "ToolTip": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\GameData.cs",
+              "RelativeToolTip": "Assets\\Scripts\\GameData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-10T19:49:33.912Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "WinQuoteWriter.cs",
+              "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\WinQuoteWriter.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\WinQuoteWriter.cs",
+              "ToolTip": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\WinQuoteWriter.cs",
+              "RelativeToolTip": "Assets\\Scripts\\WinQuoteWriter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-11T17:42:53.252Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "Projectile.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\Projectile.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Projectile.cs",
@@ -167,12 +206,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Projectile.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-06T15:57:39.583Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-06T15:57:39.583Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
               "Title": "AnimationEventForwarder.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\AnimationEventForwarder.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\AnimationEventForwarder.cs",
@@ -180,12 +218,11 @@
               "RelativeToolTip": "Assets\\Scripts\\AnimationEventForwarder.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-04T15:42:50.926Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-04T15:42:50.926Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "Character.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\Character.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Character.cs",
@@ -193,25 +230,23 @@
               "RelativeToolTip": "Assets\\Scripts\\Character.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-28T11:36:55.035Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-28T11:36:55.035Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "PlayerState.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\PlayerState.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerState.cs",
               "ToolTip": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\PlayerState.cs",
               "RelativeToolTip": "Assets\\Scripts\\PlayerState.cs",
-              "ViewState": "AgIAAHUAAAAAAAAAAAAAAI8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAPkAAAAAAAAAAAAuwBgBAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-12T10:42:42.95Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-12T10:42:42.95Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "HealthManagerScript.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\HealthManagerScript.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\HealthManagerScript.cs",
@@ -223,7 +258,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "MainMenuManager.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\MainMenuManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\MainMenuManager.cs",
@@ -231,24 +266,11 @@
               "RelativeToolTip": "Assets\\Scripts\\MainMenuManager.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-10T20:00:09.184Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-10T20:00:09.184Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "GameData.cs",
-              "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\GameData.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\GameData.cs",
-              "ToolTip": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\GameData.cs",
-              "RelativeToolTip": "Assets\\Scripts\\GameData.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-10T19:49:33.912Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "EndScreenManager.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\EndScreenManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\EndScreenManager.cs",
@@ -260,7 +282,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "PlayerBlocking.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\PlayerBlocking.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerBlocking.cs",
@@ -272,7 +294,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "PlayerMovement.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerMovement.cs",
@@ -284,7 +306,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "PlayerInput.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\PlayerInput.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerInput.cs",
@@ -296,7 +318,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 20,
               "Title": "Brawler.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\Brawler.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Brawler.cs",
@@ -308,7 +330,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 19,
               "Title": "Swordsman.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\Swordsman.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Swordsman.cs",
@@ -320,7 +342,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "Gunslinger.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\Gunslinger.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gunslinger.cs",
@@ -332,7 +354,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 21,
               "Title": "PlayerAttack.cs",
               "DocumentMoniker": "D:\\Unity\\Unity Projects\\FightingGameProject\\Assets\\Scripts\\PlayerAttack.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerAttack.cs",

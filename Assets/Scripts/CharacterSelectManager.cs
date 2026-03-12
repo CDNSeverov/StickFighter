@@ -31,9 +31,9 @@ public class CharacterSelectManager : MonoBehaviour
 
             GameData.player2Character = character;
             player2CharacterText.text = character.ToUpper();
-            
-            StartCoroutine(StartTimer());
         }
+        
+        StartCoroutine(StartTimer());
     }
 
     private string RanomizedCharacterPick() {
@@ -54,7 +54,7 @@ public class CharacterSelectManager : MonoBehaviour
     private IEnumerator StartTimer() {
         yield return new WaitForSeconds(3f);
 
-        ChangeScene("TestStage");
+        ChangeScene("StageSelect");
     }
 
     public void ChangeScene(string sceneName) {
