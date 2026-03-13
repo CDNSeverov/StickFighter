@@ -225,7 +225,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerState
   knockbackForce: 6
-  launchForce: 10
   attackHitboxPrefab: {fileID: 118092326330230623, guid: 809131c14aa2474498921f4002cfaec4, type: 3}
   attackSpawnPoint: {fileID: 3163269088039035992}
   graphics: {fileID: 2998157223478134151}
@@ -508,6 +507,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4389011411362826040, guid: 4dc93795e5e7fe24f981dce662c19d06, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: eed200f0bb2e17a478352b38617b910c, type: 2}
+    - target: {fileID: -1602814562895404597, guid: 4dc93795e5e7fe24f981dce662c19d06, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 73d423233a69f994d85a4ba5f9033b6b, type: 2}
     - target: {fileID: 919132149155446097, guid: 4dc93795e5e7fe24f981dce662c19d06, type: 3}
       propertyPath: m_Name
       value: SwordsmanModel
