@@ -4212,6 +4212,9 @@ MonoBehaviour:
   Gunslinger: {fileID: 8334144173093544539, guid: be538de5cd1164f4e979712c1d2d8c0c, type: 3}
   player1HealthBar: {fileID: 761228190}
   player2HealthBar: {fileID: 1236064832}
+  Brawler2Material: {fileID: 2100000, guid: a1828938fe1aaf9498c7b19add63f6a8, type: 2}
+  Swordsman2Material: {fileID: 2100000, guid: df2f68a7c0bf4e944b8a8434e455e32f, type: 2}
+  Gunslinger2Material: {fileID: 2100000, guid: 05e766030b2e0c24ba794679acf1ac6f, type: 2}
 --- !u!1 &1972408785
 GameObject:
   m_ObjectHideFlags: 0
