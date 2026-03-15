@@ -570,6 +570,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EndScreenManager
   winnerText: {fileID: 1576785195}
+  winnerImage: {fileID: 2132043407}
+  brawlerArt: {fileID: 21300000, guid: d2442d4afa5ddb94a92533c9c4af14e8, type: 3}
+  swordsmanArt: {fileID: 21300000, guid: e9a4f76dd1010d147b7c58cc7b106cd2, type: 3}
+  gunslingerArt: {fileID: 21300000, guid: 955ffd1a33a098544b7c3faa4f67aca0, type: 3}
 --- !u!4 &1017944683
 Transform:
   m_ObjectHideFlags: 0
