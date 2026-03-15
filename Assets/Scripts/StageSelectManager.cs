@@ -8,12 +8,27 @@ public class StageSelectManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI stageName;
 
+    [SerializeField] Image stageArt;
+
+    [SerializeField] Sprite testStageArt;
+    [SerializeField] Sprite seaStageArt;
+    [SerializeField] Sprite natureStageArt;
+
     public void AssignStage(string stage) {
         if (stage == "Random") {
             stage = RandomizedStagePick();
         } 
         
         stageName.text = stage.ToUpper();
+
+        if (stage == "TestStage") {
+            stageArt.sprite = testStageArt;
+        } else if (stage == "SeaStage") {
+            stageArt.sprite = seaStageArt;
+        } else if (stage == "NatureStage") {
+            stageArt.sprite = natureStageArt;
+        }
+
         StartCoroutine(StartTimer(stage));
     }
 

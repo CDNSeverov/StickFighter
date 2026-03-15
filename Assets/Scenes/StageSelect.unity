@@ -482,6 +482,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageSelectManager
   stageName: {fileID: 965796449}
+  stageArt: {fileID: 619620802}
+  testStageArt: {fileID: 21300000, guid: 951cc77217233fa41b575ebf2e48b12d, type: 3}
+  seaStageArt: {fileID: 21300000, guid: f9cd8d552c1af5347a3852d2beab8912, type: 3}
+  natureStageArt: {fileID: 21300000, guid: 16903d64678c1d74b8faad64e32cf4cf, type: 3}
 --- !u!1 &619620800
 GameObject:
   m_ObjectHideFlags: 0
