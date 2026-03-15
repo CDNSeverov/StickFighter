@@ -29,7 +29,7 @@ public class EndScreenManager : MonoBehaviour
             winnerImage.sprite = brawlerArt;
         } else if (character == "Swordsman") {
             winnerImage.sprite = swordsmanArt;
-        } else if (character == "Gunsinger") {
+        } else if (character == "Gunslinger") {
             winnerImage.sprite = gunslingerArt;
         }
     }

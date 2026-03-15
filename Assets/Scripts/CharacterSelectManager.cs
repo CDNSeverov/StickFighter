@@ -44,9 +44,8 @@ public class CharacterSelectManager : MonoBehaviour
             GameData.player2Character = character;
             player2CharacterText.text = character.ToUpper();
             AssignImage(character, player2Image);
+            StartCoroutine(StartTimer());
         }
-        
-        StartCoroutine(StartTimer());
     }
 
     private void AssignImage(string character, Image playerImage) {
@@ -54,7 +53,7 @@ public class CharacterSelectManager : MonoBehaviour
             playerImage.sprite = brawlerArt;
         } else if (character == "Swordsman") {
             playerImage.sprite = swordsmanArt;
-        } else if (character == "Gunsinger") {
+        } else if (character == "Gunslinger") {
             playerImage.sprite = gunslingerArt;
         }
     }
