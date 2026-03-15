@@ -14,7 +14,13 @@ public class StageSelectManager : MonoBehaviour
     [SerializeField] Sprite seaStageArt;
     [SerializeField] Sprite natureStageArt;
 
+    bool stageIsSelected = false;
+
     public void AssignStage(string stage) {
+        if (stageIsSelected) {
+            return;
+        }
+
         if (stage == "Random") {
             stage = RandomizedStagePick();
         } 
@@ -28,6 +34,8 @@ public class StageSelectManager : MonoBehaviour
         } else if (stage == "NatureStage") {
             stageArt.sprite = natureStageArt;
         }
+
+        stageIsSelected = true;
 
         StartCoroutine(StartTimer(stage));
     }

@@ -485,6 +485,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSelectManager
   player1CharacterText: {fileID: 611707983}
   player2CharacterText: {fileID: 1827685521}
+  player1Image: {fileID: 619620802}
+  player2Image: {fileID: 774187937}
+  brawlerArt: {fileID: 21300000, guid: d2442d4afa5ddb94a92533c9c4af14e8, type: 3}
+  swordsmanArt: {fileID: 21300000, guid: e9a4f76dd1010d147b7c58cc7b106cd2, type: 3}
+  gunslingerArt: {fileID: 21300000, guid: 955ffd1a33a098544b7c3faa4f67aca0, type: 3}
 --- !u!1 &611707981
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,7 +661,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 170, y: -220}
-  m_SizeDelta: {x: 645, y: 650}
+  m_SizeDelta: {x: 660, y: 650}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &619620802
 MonoBehaviour:
@@ -731,7 +736,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -170, y: -220}
-  m_SizeDelta: {x: 645, y: 650}
+  m_SizeDelta: {x: 660, y: 650}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &774187937
 MonoBehaviour:
