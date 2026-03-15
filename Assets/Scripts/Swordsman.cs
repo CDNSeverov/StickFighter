@@ -13,31 +13,48 @@ public class Swordsman : Character
     [SerializeField] GameObject bSpecialHitbox;
     [SerializeField] GameObject aSpecialHitbox;
 
+    [Header("Audio")]
+    [SerializeField] AudioSource src;
+    [SerializeField] AudioClip punchSFX;
+    [SerializeField] AudioClip slashSFX;
+    [SerializeField] AudioClip knifeSFX;
+
     public override void OnAttack1() {
-        Debug.Log("Swordsman Attack 1");
+        //Debug.Log("Swordsman Attack 1");
         state.PushForward(7f);
         state.SpawnHitboxDelayed(attack1Hitbox, 0.3f, 0.12f);
+        src.clip = punchSFX;
+        src.Play();
     }
 
     public override void OnAttack2() {
-        Debug.Log("Swordsman Attack 2");
+        //Debug.Log("Swordsman Attack 2");
         state.PushForward(7f);
         state.SpawnHitboxDelayed(attack2Hitbox, 0.2f, 0.16f);
+        src.clip = slashSFX;
+        src.Play();
     }
 
     public override void OnAttack3() {
-        Debug.Log("Swordsman Attack 3");
+        //Debug.Log("Swordsman Attack 3");
         state.PushForward(7f);
         state.SpawnHitboxDelayed(attack3Hitbox, 0.3f, 0.18f);
+        src.clip = slashSFX;
+        src.Play();
     }
 
     public override void OnAttackAir() {
-        Debug.Log("Swordsman Attack Air");
+        //Debug.Log("Swordsman Attack Air");
         state.SpawnHitboxDelayed(attackAirHitbox, 0.2f, 0.18f);
+        src.clip = slashSFX;
+        src.Play();
     }
 
     public override void NeutralSpecial() {
-        Debug.Log("Swordsman Neutral Special");
+        //Debug.Log("Swordsman Neutral Special");
+        
+        src.clip = knifeSFX;
+        src.Play();
 
         StartCoroutine(NeutralSpecialRoutine());
     }
@@ -51,9 +68,11 @@ public class Swordsman : Character
     }
 
     public override void ForwardSpecial() {
-        Debug.Log("Swordsman Forward Special");
+        //Debug.Log("Swordsman Forward Special");
 
         state.PushForward(4f);
+        src.clip = slashSFX;
+        src.Play();
         state.SpawnHitboxDelayed(fSpecialHitbox, 0.2f, 0.5f); 
         StartCoroutine(ForwardSpecialRoutine());
     }
@@ -64,17 +83,22 @@ public class Swordsman : Character
     }
 
     public override void BackSpecial() {
-        Debug.Log("Swordsman Back Special");
-
+        //Debug.Log("Swordsman Back Special");
+        
+        src.clip = slashSFX;
+        src.Play();
         state.PushForward(17f);
         state.SpawnHitboxDelayed(bSpecialHitbox, 0.4f, 0.2f);
     }
 
 
     public override void AirSpecial() { 
-        Debug.Log("Swordsman Air Special");
+        //Debug.Log("Swordsman Air Special");
 
         state.ResetVelocity();
+        
+        src.clip = knifeSFX;
+        src.Play();
         
         StartCoroutine(AirSpecialRoutine());
     }

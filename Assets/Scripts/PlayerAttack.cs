@@ -34,6 +34,6 @@ public class PlayerAttack : MonoBehaviour
         else
             target.TakeHit(hitDirection);
 
-        Debug.Log($"{other.name} was hit");
+        //Debug.Log($"{other.name} was hit");
     }
 }

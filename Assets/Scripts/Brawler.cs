@@ -12,32 +12,47 @@ public class Brawler : Character
     [SerializeField] GameObject fSpecialHitbox;
     [SerializeField] GameObject bSpecialHitbox;
     [SerializeField] GameObject aSpecialHitbox;
+
+    [Header("Audio")]
+    [SerializeField] AudioSource src;
+    [SerializeField] AudioClip punchSFX;
+    [SerializeField] AudioClip fireballSFX;
     
     public override void OnAttack1() {
-        Debug.Log("Brawler Attack 1");
+        //Debug.Log("Brawler Attack 1");
         state.PushForward(7f);
         state.SpawnHitbox(attack1Hitbox, 0.12f);
+        src.clip = punchSFX;
+        src.Play();
     }
 
     public override void OnAttack2() {
-        Debug.Log("Brawler Attack 2");
+        //Debug.Log("Brawler Attack 2");
         state.PushForward(7f);
         state.SpawnHitbox(attack2Hitbox, 0.16f);
+        src.clip = punchSFX;
+        src.Play();
     }
 
     public override void OnAttack3() {
-        Debug.Log("Brawler Attack 3");
+        //Debug.Log("Brawler Attack 3");
         state.PushForward(7f);
         state.SpawnHitboxDelayed(attack3Hitbox, 0.3f, 0.18f);
+        src.clip = punchSFX;
+        src.Play();
     }
 
     public override void OnAttackAir() {
-        Debug.Log("Brawler Attack Air");
+        //Debug.Log("Brawler Attack Air");
         state.SpawnHitboxDelayed(attackAirHitbox, 0.3f, 0.18f);
+        src.clip = punchSFX;
+        src.Play();
     }
 
     public override void NeutralSpecial() {
-        Debug.Log("Brawler Neutral Special");
+        //Debug.Log("Brawler Neutral Special");
+        src.clip = fireballSFX;
+        src.Play();
 
         StartCoroutine(NeutralSpecialRoutine());
     }
@@ -51,10 +66,12 @@ public class Brawler : Character
     }
 
     public override void ForwardSpecial() {
-        Debug.Log("Brawler Forward Special");
+        //Debug.Log("Brawler Forward Special");
 
         state.PushForward(4f);
         state.SpawnHitboxDelayed(fSpecialHitbox, 0.2f, 0.5f); 
+        src.clip = punchSFX;
+        src.Play();
         StartCoroutine(ForwardSpecialRoutine());
     }
 
@@ -64,19 +81,23 @@ public class Brawler : Character
     }
 
     public override void BackSpecial() {
-        Debug.Log("Brawler Back Special");
+        //Debug.Log("Brawler Back Special");
 
         state.PushForward(17f);
         state.SpawnHitboxDelayed(bSpecialHitbox, 0.2f, 0.3f);
+        src.clip = punchSFX;
+        src.Play();
     }
 
 
     public override void AirSpecial() {
-        Debug.Log("Brawler Air Special");
+        //Debug.Log("Brawler Air Special");
 
         state.ResetVelocity();
 
         state.SpawnHitboxDelayed(aSpecialHitbox, 0.4f, 0.4f);
+        src.clip = punchSFX;
+        src.Play();
         state.ApplyKnockBack(13f * state.FacingDirection, -6f);
     }
 

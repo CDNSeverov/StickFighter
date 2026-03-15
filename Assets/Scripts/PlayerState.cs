@@ -94,6 +94,11 @@ public class PlayerState : MonoBehaviour
 
     [Header("Health")]
     HealthManagerScript hmanager;
+    
+    [Header("Audio")]
+    [SerializeField] AudioSource src;
+    [SerializeField] AudioClip hurtSFX;
+    [SerializeField] AudioClip blockSFX;
 
     void Awake() {
         input = GetComponent<PlayerInput>();
@@ -449,6 +454,9 @@ public class PlayerState : MonoBehaviour
             return;
         }
 
+        src.clip = hurtSFX;
+        src.Play();
+
         TakeNormalHit(hitDirection);
     }
 
@@ -477,6 +485,9 @@ public class PlayerState : MonoBehaviour
             return;
         }
 
+        src.clip = blockSFX;
+        src.Play();
+
         isBlocking = true;
 
         SetState(State.BlockStun);
@@ -502,6 +513,9 @@ public class PlayerState : MonoBehaviour
         }
 
         CancelAttack();
+        
+        src.clip = hurtSFX;
+        src.Play();
 
         if (currentState == State.HoldingBack || currentState == State.BlockStun) {
             TakeBlockHit(hitDir);
@@ -531,6 +545,9 @@ public class PlayerState : MonoBehaviour
         }
 
         CancelAttack();
+        
+        src.clip = hurtSFX;
+        src.Play();
 
         if (currentState == State.HoldingBack || currentState == State.BlockStun) {
             Vector3 hitDir = new Vector3(0f, 0f, 0f);
